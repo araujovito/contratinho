@@ -29,7 +29,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "pytest-asyncio>=0.23", "ruff>=0.5"]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23", "pytest-django>=4.9", "ruff>=0.5"]
+web = ["Django>=5.2,<5.3", "dj-database-url>=2.3,<4", "psycopg[binary]>=3.2,<4"]
 
 [project.scripts]
 radar = "radar_pncp.cli:app"
@@ -44,6 +45,7 @@ packages = ["radar_pncp"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+DJANGO_SETTINGS_MODULE = "radar_pncp.web.settings"
 
 [tool.ruff]
 line-length = 100

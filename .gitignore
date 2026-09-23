@@ -8,3 +8,7 @@ build/
 .ruff_cache/
 radar.toml
 radar.db
+
+*.sqlite3
+.env
+staticfiles/
