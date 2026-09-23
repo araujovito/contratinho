@@ -63,6 +63,36 @@ A busca do portal não possui contrato público versionado. Mudanças no portal 
 exigir ajuste no adaptador; falhas preservam o catálogo anterior. Testes automatizados
 usam respostas sintéticas e nunca acessam a rede.
 
+## Dados oficiais e anexos, no clique
+
+O índice de busca resolve a descoberta, mas não a decisão: ele entrega
+`data_inicio_vigencia` e `data_fim_vigencia`, que são a vigência do contrato, e
+`valor_global` vazio em todos os 539 editais coletados na validação de
+23/09/2026. Um cartão dizia "prazo para agir 05/02/2027" para um edital
+publicado em 2025.
+
+As datas de proposta e o valor estimado existem na rota de item
+(`/api/pncp/v1/orgaos/{cnpj}/compras/{ano}/{sequencial}`), e os documentos em
+`/arquivos`. Como são uma consulta por edital, elas acontecem no primeiro
+clique do detalhe — o momento em que o usuário decide e a consulta se paga —
+e não durante a coleta.
+
+`radar_pncp/web/documentos.py` faz **uma** tentativa, com timeout de oito
+segundos e sem retentativa: a chamada roda dentro da requisição web. Quando
+falha, a página mantém o que já tinha, marca a data como não confirmada e
+oferece o link do portal. `enrichment_checked_at` é gravado mesmo no fracasso,
+então um PNCP instável não vira uma consulta por clique; `precisa_enriquecer`
+reconsulta depois de seis horas, porque prazo prorrogado e errata precisam
+aparecer.
+
+> **Não verificado contra a API real.** As rotas `/api/pncp/v1/` responderam
+> 502 e 503 durante toda a implementação, e o próprio `/api/search/` passou a
+> responder 503 depois da coleta. O mapeamento de campos
+> (`dataAberturaProposta`, `dataEncerramentoProposta`, `valorTotalEstimado`,
+> e `url`/`uri` nos arquivos) segue o contrato documentado do PNCP, mas ainda
+> não foi confirmado contra uma resposta de verdade. Os testes usam respostas
+> sintéticas. O caminho de falha, esse sim, foi verificado na tela.
+
 ## Explicações em linguagem simples
 
 O texto oficial permanece intacto. A interface remove apenas prefixos de origem e

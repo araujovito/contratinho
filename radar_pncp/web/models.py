@@ -39,6 +39,11 @@ class Opportunity(models.Model):
     summary_model = models.CharField(max_length=100, blank=True)
     summary_source_hash = models.CharField(max_length=64, blank=True)
     summarized_at = models.DateTimeField(null=True, blank=True)
+    # Preenchidos sob demanda, no primeiro clique, a partir da rota de item do
+    # PNCP: o índice de busca não traz datas de proposta nem valor confiáveis.
+    documents = models.JSONField(default=list, blank=True)
+    enriched_at = models.DateTimeField(null=True, blank=True)
+    enrichment_checked_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["-fetched_at", "pk"]
@@ -51,6 +56,11 @@ class Opportunity(models.Model):
         if letters and sum(character.isupper() for character in letters) / len(letters) > 0.85:
             text = text.capitalize()
         return text
+
+    @property
+    def has_official_dates(self):
+        """Se as datas vieram da rota de item, e não da vigência do contrato."""
+        return self.enriched_at is not None
 
     @property
     def days_remaining(self):

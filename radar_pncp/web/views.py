@@ -9,6 +9,7 @@ from django.views.decorators.http import require_POST
 
 from radar_pncp.filtro import termos_encontrados
 
+from . import documentos
 from .forms import FollowForm, PreferenceForm, SignupForm
 from .models import Follow, Opportunity, Preference
 
@@ -76,6 +77,11 @@ def opportunities(request):
 @login_required
 def detail(request, pk):
     item = get_object_or_404(Opportunity, pk=pk)
+    # O índice de busca não traz datas de proposta nem os anexos. Buscamos o
+    # dado oficial no primeiro clique: é aqui que o usuário decide, e é o único
+    # momento em que uma consulta por edital se paga.
+    if documentos.precisa_enriquecer(item):
+        documentos.enriquecer(item)
     follow = Follow.objects.filter(user=request.user, opportunity=item).first()
     preference = Preference.objects.select_related("market").filter(user=request.user).first()
     match_terms = termos_encontrados(item.title, preference.market.terms) if preference else ()

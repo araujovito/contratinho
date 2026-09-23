@@ -4,6 +4,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
+from curl_cffi.requests.errors import RequestsError
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.core.management.base import CommandError
@@ -386,3 +387,78 @@ def test_pagination_and_escaping(client, user, item):
     assert len(first.context["page"]) == 20
     assert b"<script>" not in first.content
     assert len(client.get(reverse("opportunities"), {"page": 2}).context["page"]) == 1
+
+
+@pytest.fixture
+def oportunidade_logada(client, django_user_model):
+    """Usuário com interesse definido e uma oportunidade que casa com ele."""
+    from radar_pncp.web.models import Market, Preference
+
+    market = Market.objects.create(name="Limpeza teste", slug="limpeza-teste", terms=["limpeza"])
+    item = Opportunity.objects.create(
+        pncp_id="12345678000190-1-000012/2026",
+        title="Serviço de limpeza predial",
+        agency="Órgão exemplo",
+        uf="RJ",
+        deadline=date(2027, 2, 5),  # data de vigência, o problema que queremos corrigir
+        fetched_at=timezone.now(),
+    )
+    item.markets.add(market)
+    user = django_user_model.objects.create_user("alguem", password="senha-longa-2026")
+    Preference.objects.create(user=user, market=market, uf="RJ")
+    client.force_login(user)
+    return item
+
+
+@pytest.mark.django_db
+def test_detail_busca_dados_oficiais_no_primeiro_clique(client, oportunidade_logada):
+    """O clique é o único momento em que uma consulta por edital se paga."""
+    item = oportunidade_logada
+
+    def falso(opportunity, **_):
+        opportunity.deadline = date(2026, 10, 3)
+        opportunity.documents = [
+            {"titulo": "Edital 12/2026", "tipo": "Edital", "url": "https://exemplo/1"}
+        ]
+        opportunity.enriched_at = timezone.now()
+        opportunity.enrichment_checked_at = timezone.now()
+        opportunity.save()
+        return True
+
+    with patch("radar_pncp.web.documentos.enriquecer", side_effect=falso) as consulta:
+        resposta = client.get(f"/oportunidades/{item.pk}/")
+
+    assert consulta.called
+    conteudo = resposta.content.decode()
+    assert "BAIXAR O EDITAL" in conteudo
+    assert "Edital 12/2026" in conteudo
+    assert "03/10/2026" in conteudo
+
+
+@pytest.mark.django_db
+def test_detail_continua_de_pe_com_pncp_fora_do_ar(client, oportunidade_logada):
+    item = oportunidade_logada
+
+    class Morto:
+        def get(self, url, timeout=None):
+            raise RequestsError("sem resposta")
+
+    with patch("radar_pncp.web.documentos.requests.Session", return_value=Morto()):
+        resposta = client.get(f"/oportunidades/{item.pk}/")
+
+    assert resposta.status_code == 200
+    conteudo = resposta.content.decode()
+    assert "Não conseguimos consultar os anexos agora" in conteudo
+    assert "05/02/2027" in conteudo  # o dado antigo continua visível
+
+
+@pytest.mark.django_db
+def test_detail_nao_reconsulta_em_clique_seguido(client, oportunidade_logada):
+    item = oportunidade_logada
+    item.enrichment_checked_at = timezone.now()
+    item.save()
+
+    with patch("radar_pncp.web.documentos.enriquecer") as consulta:
+        client.get(f"/oportunidades/{item.pk}/")
+
+    assert not consulta.called

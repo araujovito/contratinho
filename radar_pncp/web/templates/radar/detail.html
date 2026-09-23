@@ -30,11 +30,31 @@
     <p class="eyebrow">RESUMO DA OPORTUNIDADE</p>
     <dl>
       <div><dt>Valor estimado</dt><dd>{% if item.value != None %}R$ {{ item.value|floatformat:2 }}{% else %}Não informado pelo órgão{% endif %}</dd></div>
-      <div><dt>Prazo para agir</dt><dd>{% if item.deadline %}{{ item.deadline|date:'d/m/Y' }}{% else %}Confira no edital{% endif %}</dd></div>
+      <div><dt>Prazo para agir</dt><dd>{% if item.deadline %}{{ item.deadline|date:'d/m/Y' }}{% if not item.has_official_dates %}<br><small class="muted">data ainda não confirmada na fonte oficial</small>{% endif %}{% else %}Confira no edital{% endif %}</dd></div>
       <div><dt>Início das propostas</dt><dd>{{ item.proposal_opening_date|date:'d/m/Y'|default:'Não informado' }}</dd></div>
       <div><dt>Publicação</dt><dd>{{ item.publication_date|date:'d/m/Y'|default:'Não informada' }}</dd></div>
       <div><dt>Local</dt><dd>{{ item.uf|default:'Não informado' }}</dd></div>
     </dl>
+    {% if item.documents %}
+      <div class="documents">
+        <p class="eyebrow">BAIXAR O EDITAL</p>
+        <ul>
+          {% for documento in item.documents %}
+            <li>
+              <a href="{{ documento.url }}" target="_blank" rel="noopener noreferrer" download>
+                ⭳ {{ documento.titulo }}
+              </a>
+              {% if documento.tipo %}<small class="muted">{{ documento.tipo }}</small>{% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+        <small class="muted">Arquivos publicados pelo órgão no PNCP.</small>
+      </div>
+    {% elif item.enriched_at %}
+      <p class="muted documents-empty">O órgão não publicou anexos no PNCP para este edital.</p>
+    {% else %}
+      <p class="muted documents-empty">Não conseguimos consultar os anexos agora. Abra o edital no PNCP.</p>
+    {% endif %}
     {% if item.official_url %}<a class="button full-button" href="{{ item.official_url }}" target="_blank" rel="noopener noreferrer">Ler edital completo no PNCP ↗</a>{% endif %}
     {% if not follow %}<form method="post" action="{% url 'follow' item.pk %}">{% csrf_token %}<button class="secondary-button full-button">Acompanhar oportunidade</button></form>{% else %}<a class="secondary-button full-button" href="{% url 'following' %}">✓ Ver meu acompanhamento</a>{% endif %}
     <small>Identificador PNCP<br><strong>{{ item.pncp_id }}</strong></small>
