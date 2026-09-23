@@ -7,6 +7,11 @@ Quem esquece de olhar, perde o prazo. O radar faz essa varredura uma vez por
 execução, filtra pelo que você definiu num arquivo de regras, e imprime **só o
 que é novo** — o que já foi avisado não volta.
 
+O `radar init` já sai com um escopo estreito: **contratos de até R$ 250 mil no
+Rio de Janeiro**. É um recorte de partida, não um limite do programa — ampliar
+é editar duas linhas do `radar.toml`. Começar largo é receber cem avisos no
+primeiro dia e parar de ler todos eles.
+
 ## Em três comandos
 
 ```bash
@@ -22,9 +27,9 @@ Saída:
 ┏━━━━━━━━━━━┳━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
 ┃ Perfil    ┃ UF ┃ Objeto                                       ┃        Valor ┃
 ┡━━━━━━━━━━━╇━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
-│ impressos │ SP │ Contratação de empresa especializada em      │ R$ 184.500,00│
+│ impressos │ RJ │ Contratação de empresa especializada em      │ R$ 184.500,00│
 │           │    │ serviços gráficos para impressão de carti…   │              │
-│           │    │ MUNICIPIO DE EXEMPLO · Pregão - Eletrônico   │              │
+│           │    │ MUNICIPIO DO RIO DE JANEIRO · Pregão         │              │
 │           │    │ termos: impressão, cartilha                  │              │
 │           │    │ https://pncp.gov.br/app/editais/…            │              │
 └───────────┴────┴──────────────────────────────────────────────┴──────────────┘
@@ -41,9 +46,9 @@ agendável: coloque no cron e só receba e-mail do cron quando houver saída.
 
 ```toml
 [radar]
-uf = ["SP", "MG"]
-valor_minimo = 10000
-# valor_maximo = 500000
+uf = ["RJ"]
+valor_maximo = 250000
+# valor_minimo = 10000   # sem mínimo, edital sem valor estimado também aparece
 # modalidades = [6, 8]   # 6 = Pregão Eletrônico, 8 = Dispensa
 
 [[perfil]]
@@ -61,6 +66,12 @@ termos = ["papel sulfite", "papel offset"]
   acha `impressora`.
 - Uma licitação rende no máximo um aviso: vale o primeiro perfil que casar.
 - Sem `[radar]`, nada é filtrado por UF, valor ou modalidade.
+- `valor_maximo` não descarta edital **sem** valor estimado — o PNCP deixa o
+  campo vazio com frequência, e sumir com esses seria esconder licitação que
+  provavelmente cabe no teto. Se incomodar, use `valor_minimo` junto.
+- `uf` e a faixa de valor são aplicados aqui, depois do download: a API de
+  consulta só aceita filtro por modalidade. Estreitar o escopo deixa a lista
+  legível, não deixa a consulta mais leve.
 
 ## Opções do `check`
 

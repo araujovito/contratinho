@@ -5,6 +5,7 @@ from datetime import date
 from pathlib import Path
 
 import pytest
+from exemplos import CONFIG_TESTE
 from typer.testing import CliRunner
 
 from radar_pncp import config as cfg
@@ -54,7 +55,7 @@ def test_check_sem_config_orienta_a_rodar_init(tmp_path):
 
 def test_check_imprime_e_nao_repete(tmp_path, pncp_falso):
     config = tmp_path / "radar.toml"
-    config.write_text(cfg.EXEMPLO, encoding="utf-8")
+    config.write_text(CONFIG_TESTE, encoding="utf-8")
     banco = tmp_path / "radar.db"
     argumentos = ["check", "--config", str(config), "--db", str(banco)]
 
@@ -69,7 +70,7 @@ def test_check_imprime_e_nao_repete(tmp_path, pncp_falso):
 
 def test_seco_nao_grava_estado(tmp_path, pncp_falso):
     config = tmp_path / "radar.toml"
-    config.write_text(cfg.EXEMPLO, encoding="utf-8")
+    config.write_text(CONFIG_TESTE, encoding="utf-8")
     banco = tmp_path / "radar.db"
     argumentos = ["check", "--config", str(config), "--db", str(banco), "--seco"]
 
@@ -80,7 +81,7 @@ def test_seco_nao_grava_estado(tmp_path, pncp_falso):
 
 def test_falha_de_rede_sai_com_codigo_2(tmp_path, monkeypatch):
     config = tmp_path / "radar.toml"
-    config.write_text(cfg.EXEMPLO, encoding="utf-8")
+    config.write_text(CONFIG_TESTE, encoding="utf-8")
 
     def explodir(*_a, **_k):
         raise TimeoutError("PNCP fora do ar")

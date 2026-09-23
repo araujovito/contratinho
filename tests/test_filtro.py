@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import date
 
 import pytest
+from exemplos import CONFIG_TESTE
 
 from radar_pncp import config as cfg
 from radar_pncp.filtro import (
@@ -15,7 +16,7 @@ from radar_pncp.filtro import (
     termos_encontrados,
 )
 
-CONFIG = cfg.carregar_texto(cfg.EXEMPLO)
+CONFIG = cfg.carregar_texto(CONFIG_TESTE)
 IMPRESSOS, PAPEL = CONFIG.perfil
 
 

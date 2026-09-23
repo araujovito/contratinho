@@ -13,6 +13,11 @@ fora para que a v0.1 pudesse sair.
 
 ## Depois
 
+- **Ampliar o escopo.** A v0.1 nasce recortada em RJ e R$ 250 mil para caber
+  numa leitura diária. Ampliar é editar o `radar.toml`, não mexer no código —
+  e é o teste de que o recorte estava mesmo na configuração, e não escondido
+  numa constante.
+
 - **Data de encerramento por edital.** O `RecuperarCompraPublicacaoDTO` traz
   `dataEncerramentoProposta`, mas o modelo do `pypncp` ignora o campo. O certo
   é abrir um PR lá acrescentando-o, em vez de manter um cliente paralelo aqui.

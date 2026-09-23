@@ -15,8 +15,14 @@ def test_exemplo_gerado_pelo_init_e_valido():
     # se `radar init` cuspir um arquivo que não carrega, o projeto não anda
     configuracao = cfg.carregar_texto(cfg.EXEMPLO)
     assert [p.nome for p in configuracao.perfil] == ["impressos", "papel"]
-    assert configuracao.radar.uf == ["SP", "MG"]
-    assert configuracao.radar.valor_minimo == 10000
+
+
+def test_exemplo_traz_o_escopo_inicial_rj_ate_250k():
+    # escopo estreito de propósito; ver o comentário no topo do arquivo gerado
+    configuracao = cfg.carregar_texto(cfg.EXEMPLO)
+    assert configuracao.radar.uf == ["RJ"]
+    assert configuracao.radar.valor_maximo == 250_000
+    assert configuracao.radar.valor_minimo is None
 
 
 def test_secao_radar_e_opcional():

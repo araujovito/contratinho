@@ -155,11 +155,13 @@ def _mensagem(erro: ValidationError) -> str:
 
 
 EXEMPLO = """\
-# Filtros globais: valem para todos os perfis.
+# Escopo inicial: contratos de até R$ 250 mil no Rio de Janeiro.
+# Comece estreito. Ampliar depois é acrescentar UF ou subir o teto; começar
+# largo é receber cem avisos no primeiro dia e parar de ler todos eles.
 [radar]
-uf = ["SP", "MG"]
-valor_minimo = 10000
-# valor_maximo = 500000
+uf = ["RJ"]
+valor_maximo = 250000
+# valor_minimo = 10000   # sem mínimo, edital sem valor estimado também aparece
 # modalidades = [6, 8]   # 6 = Pregão Eletrônico, 8 = Dispensa
 
 # Um perfil por ramo. O radar avisa quando o objeto da licitação casa com
