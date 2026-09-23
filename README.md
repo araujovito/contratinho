@@ -1,5 +1,10 @@
 # radar-pncp
 
+> Em evolução para um produto web: conta, escolha de mercado e acompanhamento
+> pessoal de editais. A versão web atual é experimental e local.
+> Veja [produto](docs/PRODUTO.md), [arquitetura](docs/ARQUITETURA.md) e
+> [instruções da aplicação web](docs/WEB.md). A CLI abaixo continua disponível.
+
 Avisa quando aparece licitação do seu ramo no PNCP, dentro do prazo de proposta.
 
 Quem vende para o governo hoje abre o portal do PNCP todo dia e procura na mão.
@@ -97,9 +102,10 @@ escrito em processo que pode morrer no meio (é um job de cron). JSON reescrito
 inteiro corrompe em interrupção; SQLite dá índice e transação de graça, sem
 dependência nova.
 
-**Por que CLI e não serviço web.** O usuário-alvo já tem cron ou Agendador de
-Tarefas. Um servidor seria infraestrutura para manter sem nada em troca: não há
-multiusuário, não há sessão, não há nada para servir entre uma execução e outra.
+**Evolução de CLI para aplicação web.** A versão inicial atendia um usuário
+técnico. O produto agora atende pessoas sem familiaridade com terminal, com
+contas, preferências e acompanhamento privado. A CLI continua útil para
+automação e diagnóstico; as decisões atuais estão em `docs/ARQUITETURA.md`.
 
 **Por que `excluir` existe.** Buscar "impressão" no PNCP traz sobretudo compra
 de impressora e toner. Sem lista de exclusão a ferramenta devolve ruído, o
@@ -118,7 +124,8 @@ perder o prazo custa dinheiro.
 ## Desenvolvimento
 
 ```bash
-pip install -e ".[dev]"
+pip install -e ".[dev,web]"
+export RADAR_DEBUG=1
 pytest          # não toca a rede: as respostas do PNCP vêm de tests/fixtures/
 ruff check .
 ```
