@@ -1,9 +1,11 @@
+from django.contrib import admin
 from django.contrib.auth import views as auth
 from django.urls import path
 
 from . import views
 
 urlpatterns = [
+    path("admin/", admin.site.urls),
     path("", views.home, name="home"),
     path("conta/criar/", views.signup, name="signup"),
     path("conta/entrar/", auth.LoginView.as_view(template_name="radar/login.html"), name="login"),

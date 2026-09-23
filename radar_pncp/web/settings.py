@@ -13,6 +13,7 @@ if not SECRET_KEY:
     SECRET_KEY = "development-only-never-use-in-production-radar-pncp"
 ALLOWED_HOSTS = os.environ.get("RADAR_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 INSTALLED_APPS = [
+    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",

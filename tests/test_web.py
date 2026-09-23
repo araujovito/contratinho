@@ -62,6 +62,19 @@ def test_requires_login(client):
         assert client.get(reverse(name)).status_code == 302
 
 
+def test_admin_requires_staff_user(client, user):
+    client.force_login(user)
+    response = client.get(reverse("admin:index"))
+    assert response.status_code == 302
+
+    user.is_staff = True
+    user.is_superuser = True
+    user.save(update_fields=["is_staff", "is_superuser"])
+    response = client.get(reverse("admin:index"))
+    assert response.status_code == 200
+    assert reverse("admin:web_market_changelist") in response.content.decode()
+
+
 def test_catalog_filter_follow_and_stage(client, user, item):
     publish(
         [
