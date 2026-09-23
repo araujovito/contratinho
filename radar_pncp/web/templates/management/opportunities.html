@@ -4,13 +4,13 @@
 <section class="page-heading"><div><h1>{% if selected_market %}{{ selected_market.name }} no RJ{% else %}Oportunidades{% endif %}</h1><p>{% if selected_market %}Painel de oportunidades dentro do valor que você pretende atender.{% else %}Revise o catálogo que aparece para os usuários.{% endif %}</p></div><div class="heading-actions">{% if official_search_url %}<a class="secondary" href="{{ official_search_url }}" target="_blank" rel="noopener noreferrer">Pesquisar no PNCP ↗</a>{% endif %}<a class="primary" href="{% url 'admin_opportunity_create' %}">Nova oportunidade</a></div></section>
 {% if selected_market %}
 <section class="market-summary" aria-label="Resumo do mercado">
-  <article><span>Dentro do teto</span><strong>{{ page.paginator.count }}</strong><small>oportunidades</small></article>
+  <article><span>Compatíveis com o teto</span><strong>{{ page.paginator.count }}</strong><small>inclui valores não informados</small></article>
   <article><span>Oportunidades no RJ</span><strong>{{ market_stats.total_rj }}</strong><small>antes do filtro de valor</small></article>
   <article><span>Sem valor informado</span><strong>{{ market_stats.without_value }}</strong><small>confira no edital</small></article>
 </section>
 <form class="market-filter panel" method="get">
   <input type="hidden" name="mercado" value="{{ selected_market.slug }}">
-  <div><label for="valor_maximo">Qual é o valor máximo que você quer atender?</label><p>Mostramos apenas oportunidades do Rio de Janeiro com valor estimado dentro desse teto.</p>
+  <div><label for="valor_maximo">Qual é o valor máximo que você quer atender?</label><p>Mostramos oportunidades do RJ dentro do teto e as que exigem conferir o valor no edital.</p>
     <nav class="ceiling-options" aria-label="Opções rápidas de valor máximo">
       <a href="?mercado={{ selected_market.slug|urlencode }}&valor_maximo=50000">Até R$ 50 mil</a>
       <a href="?mercado={{ selected_market.slug|urlencode }}&valor_maximo=100000">Até R$ 100 mil</a>

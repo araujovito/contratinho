@@ -13,6 +13,7 @@ from django.utils import timezone
 from radar_pncp.filtro import Licitacao
 from radar_pncp.web.ingestion import publish
 from radar_pncp.web.models import Follow, Market, Opportunity, Preference
+from radar_pncp.web.portal import buscar_mercados
 
 pytestmark = pytest.mark.django_db
 
@@ -158,7 +159,10 @@ def test_market_dashboard_filters_rj_and_value_ceiling(client, item):
         {"mercado": "graficos", "valor_maximo": "5000"},
     )
     assert response.status_code == 200
-    assert [opportunity.pncp_id for opportunity in response.context["page"]] == [item.id]
+    assert {opportunity.pncp_id for opportunity in response.context["page"]} == {
+        item.id,
+        "unknown-value",
+    }
     assert response.context["value_ceiling"] == 5000
     assert response.context["market_stats"] == {"total_rj": 3, "without_value": 1}
     body = response.content.decode()
@@ -245,8 +249,62 @@ def test_failed_batch_rolls_back(item):
 def test_failed_network_keeps_catalog(item):
     publish([item])
     with patch("radar_pncp.fonte.buscar", side_effect=TimeoutError), pytest.raises(CommandError):
-        call_command("sync_pncp")
+        call_command("sync_pncp", fonte="consulta")
     assert Opportunity.objects.count() == 1
+
+
+def test_portal_search_maps_dates_value_and_official_url():
+    payload = {
+        "total": 1,
+        "items": [
+            {
+                "numero_controle_pncp": "12345678000190-1-000123/2026",
+                "description": "Serviço de limpeza predial",
+                "orgao_nome": "Órgão exemplo",
+                "orgao_cnpj": "12345678000190",
+                "uf": "RJ",
+                "ano": "2026",
+                "numero_sequencial": "123",
+                "modalidade_licitacao_id": "6",
+                "modalidade_licitacao_nome": "Pregão - Eletrônico",
+                "valor_global": 42000.5,
+                "data_publicacao_pncp": "2026-09-15T09:00:00",
+                "data_inicio_vigencia": "2026-09-16T08:00:00",
+                "data_fim_vigencia": "2026-10-01T18:00:00",
+            }
+        ],
+    }
+
+    class Response:
+        status_code = 200
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return payload
+
+    class Client:
+        def __init__(self):
+            self.requests = []
+
+        def get(self, url, params):
+            self.requests.append((url, params))
+            return Response()
+
+    client = Client()
+    market = Market(name="Limpeza", slug="limpeza", terms=["limpeza"])
+    results = buscar_mercados([market], client=client, pause=0)
+
+    assert len(results) == 1
+    result = results[0]
+    assert result.valor == 42000.5
+    assert result.publicacao == date(2026, 9, 15)
+    assert result.abertura == date(2026, 9, 16)
+    assert result.encerramento == date(2026, 10, 1)
+    assert result.url == "https://pncp.gov.br/app/editais/12345678000190/2026/123"
+    assert client.requests[0][1]["ufs"] == "RJ"
+    assert client.requests[0][1]["status"] == "recebendo_proposta"
 
 
 def test_untrusted_url_not_published(item):

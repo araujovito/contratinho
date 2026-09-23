@@ -91,7 +91,7 @@ def opportunities(request):
                 "ufs": "RJ",
             }
         )
-        items = items.filter(value__lte=value_ceiling)
+        items = items.filter(Q(value__lte=value_ceiling) | Q(value__isnull=True))
     if query:
         items = items.filter(
             Q(title__icontains=query) | Q(agency__icontains=query) | Q(pncp_id__icontains=query)

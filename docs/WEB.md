@@ -27,25 +27,41 @@ Fora desse modo, a área exige uma conta administrativa autenticada normalmente.
 Em outro terminal com o mesmo ambiente:
 
 ```bash
-python manage.py sync_pncp --dias 30
+python manage.py sync_pncp
 ```
 
-A coleta usa o adaptador existente, baixa antes de iniciar a transação e atualiza
-por identificador PNCP. Classifica o catálogo para todos os mercados. Rodadas
+A coleta consulta a busca pública usada pelo portal, limitada a editais que estão
+recebendo propostas no RJ e aos termos cadastrados nos mercados. Ela baixa tudo
+antes de iniciar a transação e atualiza por identificador PNCP. Classifica o
+catálogo para todos os mercados. Rodadas
 repetidas preservam os acompanhamentos. Não agenda tarefas automaticamente.
 Execute apenas um coletor por vez nesta versão; a coleta ainda carrega o lote
 em memória e não é adequada a um catálogo nacional de grande volume.
 
-O DTO atual de pypncp 1.2.1 não expõe encerramento. A interface não inventa prazo:
-mostra “não informado” e orienta conferir a fonte. Editais antigos podem continuar
-no catálogo; a última consulta é exibida. A reconciliação de cancelamentos e
-encerramentos ainda é requisito para o piloto. Os resultados não têm filtro por
+Publicação, início e encerramento vêm do índice de busca. Cada oportunidade recebe
+um link canônico para a página pública do edital no PNCP. Editais antigos podem
+continuar no catálogo; a última consulta é exibida. A reconciliação de cancelamentos
+e encerramentos ainda é requisito para o piloto. Os resultados não têm filtro por
 esfera administrativa; UF não significa governo estadual.
 
-Em 22/09/2026, uma tentativa direta ao endpoint oficial de propostas, com
-`dataFinal=20261022`, página 1 e tamanho 10, excedeu 20 segundos sem resposta.
-Isso registra apenas o resultado neste ambiente, não comprova indisponibilidade
-geral. Fixtures de testes seguem sintéticas.
+### Diagnóstico de conectividade em 22/09/2026
+
+DNS, TLS e a página inicial do PNCP responderam normalmente. As rotas versionadas
+de consulta, detalhe e Swagger aceitaram a conexão, mas não enviaram resposta em
+15 a 30 segundos. O cliente anterior também fazia três tentativas de 30 segundos e
+buscava todas as páginas, o que transformava a falha em uma espera longa.
+
+A rota oficial usada pelo próprio portal (`/api/search/`) respondeu com dados reais,
+mas o balanceador encerrou conexões de clientes Python HTTP genéricos. O coletor
+agora usa a mesma negociação TLS de um navegador e retentativas limitadas. Na
+validação local, processou 542 editais em aproximadamente 15 segundos; os 542 tinham
+datas e URL oficial, e três URLs amostradas responderam HTTP 200. A integração
+anterior permanece disponível para diagnóstico com
+`python manage.py sync_pncp --fonte consulta --dias 30`.
+
+A busca do portal não possui contrato público versionado. Mudanças no portal podem
+exigir ajuste no adaptador; falhas preservam o catálogo anterior. Testes automatizados
+usam respostas sintéticas e nunca acessam a rede.
 
 ## Verificação
 

@@ -3,6 +3,8 @@ from django.core.management.base import BaseCommand, CommandError
 from radar_pncp import fonte
 from radar_pncp.config import Config, Perfil
 from radar_pncp.web.ingestion import publish
+from radar_pncp.web.models import Market
+from radar_pncp.web.portal import buscar_mercados
 
 
 class Command(BaseCommand):
@@ -10,14 +12,23 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("--dias", type=int, default=30)
+        parser.add_argument(
+            "--fonte",
+            choices=["portal", "consulta"],
+            default="portal",
+            help="portal usa a busca pública; consulta preserva a integração anterior.",
+        )
 
     def handle(self, *args, **options):
         days = options["dias"]
         if not 1 <= days <= 365:
             raise CommandError("--dias deve estar entre 1 e 365.")
-        config = Config(perfil=[Perfil(nome="coleta", termos=["coleta"])])
         try:
-            items = fonte.buscar(config, dias=days)
+            if options["fonte"] == "portal":
+                items = buscar_mercados(list(Market.objects.all()))
+            else:
+                config = Config(perfil=[Perfil(nome="coleta", termos=["coleta"])])
+                items = fonte.buscar(config, dias=days)
         except Exception as exc:
             raise CommandError("Falha ao consultar PNCP; catálogo anterior preservado.") from exc
         count = publish(items)

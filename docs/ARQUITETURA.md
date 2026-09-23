@@ -20,5 +20,8 @@ Referências:
 - https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 - https://www.gov.br/pncp/pt-br/pncp/manuais
 
-A API oficial ainda precisa de validação de contrato com resposta real. Fixtures
-atuais são sintéticas. Não afirmar cobertura completa nem frescor sem evidência.
+A coleta web usa a busca oficial do portal porque a API versionada de consulta não
+respondeu durante a validação de 22/09/2026. O adaptador fica isolado em `portal.py`,
+aplica retentativas limitadas e só publica depois de concluir a rede. A rota de busca
+não possui contrato público versionado, portanto deve ser monitorada. Fixtures de
+testes são sintéticas; não afirmar cobertura completa nem frescor sem evidência.
