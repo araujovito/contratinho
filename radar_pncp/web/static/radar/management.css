@@ -126,6 +126,17 @@ td strong, td small { display: block; }
 td small { margin-top: 3px; color: #788983; font-size: 11px; }
 .pill { display: inline-block; margin: 2px; padding: 3px 7px; border-radius: 20px; background: #e8f2eb; color: #2d6752; font-size: 10px; }
 .muted { color: #83918c; }
+.market-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+.market-summary article { padding: 17px 19px; background: #fff; border: 1px solid #dce3da; border-radius: 11px; }
+.market-summary span, .market-summary small { display: block; color: #73847e; font-size: 11px; }
+.market-summary strong { display: block; margin: 5px 0 1px; font-size: 25px; }
+.market-filter { display: flex; align-items: center; justify-content: space-between; gap: 28px; margin-bottom: 14px; padding: 19px; }
+.market-filter label { display: block; font-size: 14px; font-weight: 750; }
+.market-filter p { margin: 4px 0 0; color: #71827b; font-size: 11px; }
+.money-input { display: flex; align-items: center; flex: 0 0 360px; }
+.money-input span { align-self: stretch; display: grid; place-items: center; padding: 0 11px; border: 1px solid #b9c6c0; border-right: 0; border-radius: 8px 0 0 8px; background: #edf3ee; color: #47665a; font-size: 12px; font-weight: 700; }
+.money-input input { border-radius: 0; }
+.money-input button { margin-left: 8px; white-space: nowrap; }
 .filter-note { display: flex; justify-content: space-between; max-width: 580px; margin: -8px 0 14px; padding: 10px 13px; border-radius: 8px; background: #e4f1e8; color: #2b6650; font-size: 12px; }
 .filter-note a { font-weight: 700; }
 .pagination { display: flex; justify-content: center; align-items: center; gap: 18px; padding: 22px; font-size: 13px; }
@@ -162,12 +173,15 @@ textarea { resize: vertical; }
   main { margin-left: 0; padding: 0 20px 40px; }
   .metrics { grid-template-columns: repeat(2, 1fr); }
   .dashboard-grid, .cards-grid { grid-template-columns: 1fr; }
+  .market-filter { align-items: stretch; flex-direction: column; gap: 15px; }
+  .money-input { flex-basis: auto; }
 }
 @media (max-width: 560px) {
   .topbar { height: 72px; }
   .today, .status { display: none; }
   .page-heading { align-items: start; flex-direction: column; padding-top: 30px; }
   .metrics { grid-template-columns: 1fr 1fr; }
+  .market-summary { grid-template-columns: 1fr; }
   .metrics a { padding: 16px; }
   .field ul:not(.errorlist) { grid-template-columns: 1fr; }
 }

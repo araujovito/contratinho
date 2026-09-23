@@ -1,3 +1,5 @@
+from decimal import Decimal, InvalidOperation
+
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import user_passes_test
@@ -64,10 +66,22 @@ def opportunities(request):
     query = request.GET.get("q", "").strip()
     market_slug = request.GET.get("mercado", "").strip()
     selected_market = None
+    value_ceiling = None
+    market_stats = None
     items = Opportunity.objects.prefetch_related("markets")
     if market_slug:
         selected_market = get_object_or_404(Market, slug=market_slug)
-        items = items.filter(markets=selected_market)
+        items = items.filter(markets=selected_market, uf="RJ")
+        raw_ceiling = request.GET.get("valor_maximo", "250000").strip().replace(",", ".")
+        try:
+            value_ceiling = max(Decimal("0"), Decimal(raw_ceiling))
+        except InvalidOperation:
+            value_ceiling = Decimal("250000")
+        market_stats = {
+            "total_rj": items.count(),
+            "without_value": items.filter(value__isnull=True).count(),
+        }
+        items = items.filter(value__lte=value_ceiling)
     if query:
         items = items.filter(
             Q(title__icontains=query) | Q(agency__icontains=query) | Q(pncp_id__icontains=query)
@@ -81,6 +95,8 @@ def opportunities(request):
             "page": page,
             "query": query,
             "selected_market": selected_market,
+            "value_ceiling": value_ceiling,
+            "market_stats": market_stats,
         },
     )
 

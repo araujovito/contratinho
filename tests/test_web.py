@@ -137,6 +137,29 @@ def test_market_card_opens_only_its_opportunities(client, item):
     assert response.context["selected_market"] == market
 
 
+@override_settings(DEBUG=True)
+def test_market_dashboard_filters_rj_and_value_ceiling(client, item):
+    publish(
+        [
+            item,
+            replace(item, id="high-value", valor=90000),
+            replace(item, id="other-state", uf="SP", valor=1000),
+            replace(item, id="unknown-value", valor=None),
+        ]
+    )
+    response = client.get(
+        reverse("admin_opportunities"),
+        {"mercado": "graficos", "valor_maximo": "5000"},
+    )
+    assert response.status_code == 200
+    assert [opportunity.pncp_id for opportunity in response.context["page"]] == [item.id]
+    assert response.context["value_ceiling"] == 5000
+    assert response.context["market_stats"] == {"total_rj": 3, "without_value": 1}
+    body = response.content.decode()
+    assert "Serviços gráficos no RJ" in body
+    assert "Qual é o valor máximo" in body
+
+
 def test_catalog_filter_follow_and_stage(client, user, item):
     publish(
         [
