@@ -66,6 +66,23 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+# --- Envio de e-mail -------------------------------------------------------
+# Sem RADAR_SMTP_HOST o Django imprime a mensagem no terminal, que é o que se
+# quer em desenvolvimento: dá para ler o alerta inteiro sem configurar nada.
+EMAIL_HOST = os.environ.get("RADAR_SMTP_HOST", "")
+if EMAIL_HOST:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_PORT = int(os.environ.get("RADAR_SMTP_PORT", "587"))
+    EMAIL_HOST_USER = os.environ.get("RADAR_SMTP_USER", "")
+    EMAIL_HOST_PASSWORD = os.environ.get("RADAR_SMTP_PASSWORD", "")
+    EMAIL_USE_TLS = os.environ.get("RADAR_SMTP_TLS", "1") == "1"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = os.environ.get("RADAR_FROM_EMAIL", "Radar PNCP <nao-responda@localhost>")
+# Endereço público do site, para os links do e-mail: a mensagem é lida fora do
+# navegador, então caminho relativo não serve.
+RADAR_SITE_URL = os.environ.get("RADAR_SITE_URL", "http://127.0.0.1:8000").rstrip("/")
+
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "opportunities"
 LOGOUT_REDIRECT_URL = "home"

@@ -1,0 +1,22 @@
+Olá!
+
+Encontramos oportunidades novas em {{ aviso.preference.market.name|lower }}{% if aviso.preference.uf %} no {{ aviso.preference.uf }}{% endif %}.
+
+{% for item in aviso.oportunidades %}
+--------------------------------------------------------------------
+{{ item.readable_object|truncatechars:180 }}
+
+{{ item.agency }} · {{ item.uf|default:"local não informado" }}
+Prazo: {% if item.deadline %}{{ item.deadline|date:"d/m/Y" }}{% else %}confira no edital{% endif %}
+Valor: {% if item.value != None %}R$ {{ item.value|floatformat:2 }}{% else %}não informado pelo órgão{% endif %}
+{% if item.match_terms %}Apareceu porque encontramos "{{ item.match_terms|join:'", "' }}" no objeto.{% endif %}
+Entender: {{ site }}/oportunidades/{{ item.pk }}/
+--------------------------------------------------------------------
+{% endfor %}
+{% if aviso.restantes %}
+Há mais {{ aviso.restantes }} oportunidade{{ aviso.restantes|pluralize }} esperando em {{ url_lista }}
+{% endif %}
+
+Confira sempre prazos e exigências no edital oficial antes de participar.
+
+Para mudar mercado ou estado: {{ url_interesses }}

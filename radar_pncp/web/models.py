@@ -69,6 +69,26 @@ class Opportunity(models.Model):
         return (self.deadline - timezone.localdate()).days
 
 
+class Alert(models.Model):
+    """Registro de que uma oportunidade já foi avisada a alguém.
+
+    Mesma ideia do `estado.py` da CLI: o valor de um radar está em avisar uma
+    vez. Repetir o mesmo edital todo dia treina o usuário a ignorar o e-mail,
+    e aí a ferramenta morre sem dar erro nenhum.
+    """
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    opportunity = models.ForeignKey("Opportunity", on_delete=models.CASCADE)
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = [("user", "opportunity")]
+        indexes = [models.Index(fields=["user", "sent_at"])]
+
+    def __str__(self):
+        return f"{self.user} ← {self.opportunity_id}"
+
+
 class Follow(models.Model):
     class Stage(models.TextChoices):
         INTERESTED = "interested", "Interessado"

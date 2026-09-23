@@ -96,6 +96,38 @@ aparecer.
 > não foi confirmado contra uma resposta de verdade. Os testes usam respostas
 > sintéticas. O caminho de falha, esse sim, foi verificado na tela.
 
+## Aviso por e-mail
+
+O problema que abriu o projeto foi "quem esquece de olhar, perde o prazo". Um
+site não resolve isso — exige lembrar de entrar. O comando abaixo é o que fecha
+a promessa, e foi feito para o cron:
+
+```bash
+python manage.py send_alerts --seco    # mostra o que sairia, sem enviar
+python manage.py send_alerts
+```
+
+Sem `RADAR_SMTP_HOST`, o Django imprime a mensagem no terminal: dá para ler o
+alerta inteiro sem configurar nada. Para enviar de verdade:
+
+- `RADAR_SMTP_HOST`, `RADAR_SMTP_PORT` (padrão 587), `RADAR_SMTP_USER`,
+  `RADAR_SMTP_PASSWORD`, `RADAR_SMTP_TLS` (padrão ligado).
+- `RADAR_FROM_EMAIL`: remetente.
+- `RADAR_SITE_URL`: endereço público, porque o e-mail é lido fora do navegador
+  e link relativo não serve.
+
+Cada pessoa recebe no máximo oito oportunidades por mensagem; o resto fica no
+site e o e-mail diz quantas são. Edital com prazo vencido nunca entra. O envio
+é registrado em `Alert` só **depois** de o SMTP aceitar, então falha devolve o
+edital para a próxima rodada: repetir incomoda, perder prazo custa dinheiro.
+Uma rodada não para por causa de um envio que falhou.
+
+No cron, junto da coleta:
+
+```cron
+0 7 * * 1-5  cd /caminho && python manage.py sync_pncp && python manage.py send_alerts
+```
+
 ## Explicações em linguagem simples
 
 O texto oficial permanece intacto. A interface remove apenas prefixos de origem e

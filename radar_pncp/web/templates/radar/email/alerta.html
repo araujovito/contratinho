@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-br">
+<body style="margin:0;padding:24px;background:#f4f6f4;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#1d2b1d;">
+  <div style="max-width:620px;margin:0 auto;background:#fff;border-radius:12px;padding:24px;">
+    <p style="margin:0 0 4px;font-size:12px;letter-spacing:.08em;color:#4a6b4a;">RADAR PNCP</p>
+    <h1 style="margin:0 0 16px;font-size:20px;line-height:1.3;">
+      Oportunidades novas em {{ aviso.preference.market.name|lower }}{% if aviso.preference.uf %} no {{ aviso.preference.uf }}{% endif %}
+    </h1>
+    {% for item in aviso.oportunidades %}
+      <div style="border:1px solid #dde5dd;border-radius:10px;padding:14px;margin-bottom:12px;">
+        <p style="margin:0 0 6px;font-size:12px;color:#4a6b4a;">{{ item.agency }} · {{ item.uf|default:"local não informado" }}</p>
+        <p style="margin:0 0 10px;font-size:15px;line-height:1.45;">{{ item.readable_object|truncatechars:180 }}</p>
+        <p style="margin:0 0 10px;font-size:13px;">
+          <strong>Prazo:</strong> {% if item.deadline %}{{ item.deadline|date:"d/m/Y" }}{% else %}confira no edital{% endif %} &nbsp;·&nbsp;
+          <strong>Valor:</strong> {% if item.value != None %}R$ {{ item.value|floatformat:2 }}{% else %}não informado{% endif %}
+        </p>
+        {% if item.match_terms %}<p style="margin:0 0 10px;font-size:12px;color:#4a6b4a;">Apareceu porque encontramos “{{ item.match_terms|join:'”, “' }}” no objeto.</p>{% endif %}
+        <a href="{{ site }}/oportunidades/{{ item.pk }}/" style="display:inline-block;background:#1f6b3a;color:#fff;text-decoration:none;padding:8px 14px;border-radius:7px;font-size:13px;">Entender oportunidade</a>
+      </div>
+    {% endfor %}
+    {% if aviso.restantes %}
+      <p style="font-size:13px;">Há mais {{ aviso.restantes }} oportunidade{{ aviso.restantes|pluralize }} esperando. <a href="{{ url_lista }}" style="color:#1f6b3a;">Ver todas</a>.</p>
+    {% endif %}
+    <p style="font-size:12px;color:#5a6b5a;border-top:1px solid #e6ece6;padding-top:12px;margin-top:18px;">
+      Confira sempre prazos e exigências no edital oficial antes de participar.<br>
+      <a href="{{ url_interesses }}" style="color:#4a6b4a;">Mudar mercado ou estado</a>
+    </p>
+  </div>
+</body>
+</html>
