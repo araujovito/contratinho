@@ -12,5 +12,15 @@
        privacidade/exclusão de conta, monitoramento, backup/restauração e deploy.
 10. [ ] Validar com usuários; depois alertas consentidos e modelo de cobrança.
 
+## Próxima frente de produto
+
+1. [ ] Substituir a lista pública por cartões de decisão responsivos.
+2. [ ] Redesenhar o detalhe público em torno de resumo, prazo, valor e próximo passo.
+3. [ ] Explicar a correspondência e aceitar “não serve para mim”.
+4. [ ] Criar calendário e alertas de prazo.
+5. [ ] Analisar anexos oficiais com referência verificável à fonte.
+
+A direção e o benchmark estão documentados em `docs/REFERENCIAS_UX.md`.
+
 A primeira versão web é local e experimental. O piloto público depende do item 9,
 da validação da fonte e de uma revisão de segurança e acessibilidade.

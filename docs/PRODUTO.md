@@ -16,6 +16,14 @@ Mercados iniciais são hipóteses editáveis: serviços gráficos, limpeza, manu
 informática e alimentação. Correspondência por palavras é explicada, não apresentada
 como certificação de aptidão. Estados indicam local da contratação, não esfera do órgão.
 
+## Princípio de experiência
+
+Cada tela deve ajudar o usuário a responder: o que o órgão quer, se combina com seu
+negócio, quanto vale, qual é o prazo, o que conferir e onde está a fonte oficial. A
+interface pública usa cartões de decisão e linguagem cotidiana; tabelas e identificadores
+técnicos ficam em segundo plano. A análise de concorrentes e a direção visual estão em
+`docs/REFERENCIAS_UX.md`.
+
 ## Métricas de validação
 - Ativação: proporção de contas que configuram mercado e salvam um edital.
 - Tempo até o primeiro edital acompanhado.
@@ -24,5 +32,6 @@ como certificação de aptidão. Estados indicam local da contratação, não es
 Metas numéricas serão definidas após entrevistas e piloto; ainda não há validação comercial.
 
 ## Fora desta primeira entrega
-Pagamento, envio automático de propostas, recomendações jurídicas, IA para habilitação,
-marketplace e microserviços. Alertas externos dependem de preferências e entrega confiável.
+Pagamento, envio automático de propostas, recomendações jurídicas, decisão automática de
+habilitação, marketplace e microserviços. Alertas externos dependem de preferências e
+entrega confiável.
