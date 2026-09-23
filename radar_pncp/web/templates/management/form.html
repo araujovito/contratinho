@@ -2,9 +2,9 @@
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
 <section class="page-heading compact"><div><a class="back" href="{% url back_url %}">← Voltar</a><h1>{{ title }}</h1><p>{{ description }}</p></div></section>
-<form class="editor panel" method="post">{% csrf_token %}
+<form class="editor panel{% if opportunity_editor %} opportunity-editor{% endif %}" method="post">{% csrf_token %}
   {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
-  {% for field in form %}<div class="field{% if field.field.widget.input_type == 'checkbox' %} check-field{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{{ field.errors }}</div>{% endfor %}
+  {% for field in form %}<div class="field field-{{ field.name }}{% if field.field.widget.input_type == 'checkbox' %} check-field{% endif %}">{% if opportunity_editor and field.name == 'title' %}<div class="object-heading"><span>Objeto do edital</span><h2>O que o órgão precisa contratar?</h2><p id="object-reading-help">Leia a descrição completa para entender se esta oportunidade combina com o seu negócio.</p></div><label class="sr-only" for="{{ field.id_for_label }}">{{ field.label }}</label>{% else %}<label for="{{ field.id_for_label }}">{{ field.label }}</label>{% endif %}{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{{ field.errors }}</div>{% endfor %}
   <div class="form-actions"><button class="primary">Salvar alterações</button><a href="{% url back_url %}">Cancelar</a></div>
 </form>
 {% endblock %}

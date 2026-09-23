@@ -129,6 +129,7 @@ def opportunity_edit(request, pk=None):
             "description": "Revise os dados exibidos no catálogo público.",
             "form": form,
             "back_url": "admin_opportunities",
+            "opportunity_editor": True,
         },
     )
 

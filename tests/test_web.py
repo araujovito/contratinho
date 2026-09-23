@@ -117,6 +117,8 @@ def test_management_opportunity_uses_checkboxes_for_markets(client, item):
     assert response.status_code == 200
     assert 'type="checkbox"' in body
     assert "selector-available" not in body
+    assert "O que o órgão precisa contratar?" in body
+    assert "opportunity-object-input" in body
 
 
 @override_settings(DEBUG=True)

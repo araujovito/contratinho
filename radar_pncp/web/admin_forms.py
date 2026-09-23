@@ -64,7 +64,13 @@ class OpportunityAdminForm(forms.ModelForm):
             "markets": "Mercados relacionados",
         }
         widgets = {
-            "title": forms.Textarea(attrs={"rows": 4}),
+            "title": forms.Textarea(
+                attrs={
+                    "rows": 9,
+                    "class": "opportunity-object-input",
+                    "aria-describedby": "object-reading-help",
+                }
+            ),
             "publication_date": forms.DateInput(attrs={"type": "date"}),
             "proposal_opening_date": forms.DateInput(attrs={"type": "date"}),
             "deadline": forms.DateInput(attrs={"type": "date"}),
