@@ -159,3 +159,49 @@ def test_uma_licitacao_rende_no_maximo_um_achado():
     achados = filtrar([licitacao("Impressão em papel sulfite")], CONFIG)
     assert len(achados) == 1
     assert achados[0].perfil == "impressos"
+
+
+# --- plural em português -----------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "texto,termo",
+    [
+        # plural regular, em qualquer palavra do termo — não só na última
+        ("serviços gráficos", "serviço gráfico"),
+        ("serviço gráfico", "serviços gráficos"),
+        ("materiais de limpeza predial", "material de limpeza"),
+        ("Unidades de Conservação ambiental", "unidade de conservação"),
+        # plural irregular: -ão, -l, -m
+        ("licitações e contratos", "licitação"),
+        ("aquisição de papéis", "papel"),
+        ("impressões digitais", "impressão"),
+        ("homens e mulheres", "homem"),
+        # estrangeirismo que o edital pluraliza com -s
+        ("toners e cartuchos", "toner"),
+        # o termo já no plural precisa achar o singular
+        ("aquisição de papel", "papéis"),
+    ],
+)
+def test_plural_casa_nos_dois_sentidos(texto, termo):
+    assert casa(texto, termo)
+
+
+@pytest.mark.parametrize(
+    "texto,termo",
+    [
+        # o caso que motiva `excluir` não pode regredir com o plural novo
+        ("aquisição de impressora multifuncional", "impressão"),
+        ("impressoras", "impressão"),
+        ("papelão ondulado", "papel"),
+        ("cartuchos para impressora", "impressão"),
+    ],
+)
+def test_plural_nao_afrouxa_palavra_inteira(texto, termo):
+    assert not casa(texto, termo)
+
+
+def test_preposicao_nao_ganha_plural():
+    # 'de' não pode virar 'des' e casar coisa errada
+    assert casa("material de limpeza", "material de limpeza")
+    assert not casa("material des limpeza", "material de limpeza")
