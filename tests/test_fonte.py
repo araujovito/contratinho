@@ -56,6 +56,8 @@ def test_traducao_do_dto(pagina_proposta):
     assert licitacao.orgao == "MUNICIPIO DE EXEMPLO"
     assert licitacao.modalidade_id == 6
     assert licitacao.valor == 184500.0
+    assert str(licitacao.publicacao) == "2026-09-15"
+    assert str(licitacao.abertura) == "2026-09-16"
     assert "cartilhas" in licitacao.objeto
     assert licitacao.complemento.startswith("Tiragem")
     assert licitacao.url == "https://pncp.gov.br/app/editais/12345678000190/2026/123"

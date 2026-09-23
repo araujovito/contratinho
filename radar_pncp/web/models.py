@@ -24,6 +24,8 @@ class Opportunity(models.Model):
     agency = models.CharField(max_length=500)
     uf = models.CharField(max_length=2, blank=True, db_index=True)
     value = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    publication_date = models.DateField(null=True, blank=True, db_index=True)
+    proposal_opening_date = models.DateField(null=True, blank=True)
     deadline = models.DateField(null=True, blank=True, db_index=True)
     official_url = models.URLField(max_length=500, blank=True)
     markets = models.ManyToManyField(Market)

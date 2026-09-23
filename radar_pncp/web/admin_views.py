@@ -1,4 +1,5 @@
 from decimal import Decimal, InvalidOperation
+from urllib.parse import urlencode
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -68,6 +69,7 @@ def opportunities(request):
     selected_market = None
     value_ceiling = None
     market_stats = None
+    official_search_url = None
     items = Opportunity.objects.prefetch_related("markets")
     if market_slug:
         selected_market = get_object_or_404(Market, slug=market_slug)
@@ -81,6 +83,14 @@ def opportunities(request):
             "total_rj": items.count(),
             "without_value": items.filter(value__isnull=True).count(),
         }
+        official_search_url = "https://pncp.gov.br/app/editais?" + urlencode(
+            {
+                "pagina": 1,
+                "q": selected_market.terms[0] if selected_market.terms else selected_market.name,
+                "status": "recebendo_proposta",
+                "ufs": "RJ",
+            }
+        )
         items = items.filter(value__lte=value_ceiling)
     if query:
         items = items.filter(
@@ -97,6 +107,7 @@ def opportunities(request):
             "selected_market": selected_market,
             "value_ceiling": value_ceiling,
             "market_stats": market_stats,
+            "official_search_url": official_search_url,
         },
     )
 

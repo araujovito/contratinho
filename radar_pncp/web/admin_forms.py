@@ -45,6 +45,8 @@ class OpportunityAdminForm(forms.ModelForm):
             "agency",
             "uf",
             "value",
+            "publication_date",
+            "proposal_opening_date",
             "deadline",
             "official_url",
             "markets",
@@ -55,12 +57,16 @@ class OpportunityAdminForm(forms.ModelForm):
             "agency": "Órgão",
             "uf": "UF",
             "value": "Valor estimado",
+            "publication_date": "Data de publicação",
+            "proposal_opening_date": "Abertura das propostas",
             "deadline": "Encerramento",
             "official_url": "Link oficial",
             "markets": "Mercados relacionados",
         }
         widgets = {
             "title": forms.Textarea(attrs={"rows": 4}),
+            "publication_date": forms.DateInput(attrs={"type": "date"}),
+            "proposal_opening_date": forms.DateInput(attrs={"type": "date"}),
             "deadline": forms.DateInput(attrs={"type": "date"}),
             "markets": forms.CheckboxSelectMultiple(),
         }

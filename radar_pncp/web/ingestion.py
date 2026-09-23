@@ -37,6 +37,8 @@ def publish(items):
                 "agency": item.orgao,
                 "uf": item.uf or "",
                 "value": Decimal(str(item.valor)) if item.valor is not None else None,
+                "publication_date": item.publicacao,
+                "proposal_opening_date": item.abertura,
                 "deadline": item.encerramento,
                 "official_url": official_url(item.url),
                 "fetched_at": now,

@@ -36,6 +36,7 @@ def para_licitacao(contratacao: Contratacao) -> Licitacao:
         f"{contratacao.orgao_cnpj}-{contratacao.ano_compra}-{contratacao.sequencial_compra}"
     )
     publicacao = contratacao.data_publicacao_pncp
+    abertura = contratacao.data_abertura_proposta
     return Licitacao(
         id=identificador,
         objeto=contratacao.objeto_compra or "",
@@ -50,6 +51,7 @@ def para_licitacao(contratacao: Contratacao) -> Licitacao:
         publicacao=publicacao.date() if publicacao else None,
         complemento=contratacao.informacao_complementar or "",
         url=_url(contratacao),
+        abertura=abertura.date() if abertura else None,
     )
 
 

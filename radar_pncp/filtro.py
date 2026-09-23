@@ -33,6 +33,7 @@ class Licitacao:
     publicacao: date | None
     complemento: str = ""
     url: str | None = None
+    abertura: date | None = None
 
     @property
     def texto(self) -> str:

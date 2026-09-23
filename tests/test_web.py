@@ -1,5 +1,5 @@
 from dataclasses import replace
-from datetime import timedelta
+from datetime import date, timedelta
 from unittest.mock import patch
 
 import pytest
@@ -139,6 +139,12 @@ def test_market_card_opens_only_its_opportunities(client, item):
 
 @override_settings(DEBUG=True)
 def test_market_dashboard_filters_rj_and_value_ceiling(client, item):
+    item = replace(
+        item,
+        publicacao=date(2026, 9, 15),
+        abertura=date(2026, 9, 16),
+        encerramento=date(2026, 10, 1),
+    )
     publish(
         [
             item,
@@ -160,6 +166,13 @@ def test_market_dashboard_filters_rj_and_value_ceiling(client, item):
     assert "Qual é o valor máximo" in body
     assert "Até R$ 50 mil" in body
     assert "Até R$ 500 mil" in body
+    assert "15/09/2026" in body
+    assert "16/09/2026" in body
+    assert "01/10/2026" in body
+    assert "Abrir edital" in body
+    assert "Pesquisar no PNCP" in body
+    assert "status=recebendo_proposta" in body
+    assert "ufs=RJ" in body
 
 
 def test_catalog_filter_follow_and_stage(client, user, item):
