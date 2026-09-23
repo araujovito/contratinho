@@ -15,7 +15,7 @@ primeiro dia e parar de ler todos eles.
 ## Em três comandos
 
 ```bash
-pip install radar-pncp
+pip install radar-pncp     # requer Python 3.12+
 radar init          # cria radar.toml com um exemplo comentado
 radar check         # consulta o PNCP e imprime as licitações novas
 ```

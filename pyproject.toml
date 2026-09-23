@@ -7,7 +7,8 @@ name = "radar-pncp"
 version = "0.1.0"
 description = "Radar de licitações abertas do PNCP: filtra editais por perfil e avisa só o que é novo."
 readme = "README.md"
-requires-python = ">=3.11"
+# O pypncp exige 3.12+; não dá para descer sem largar a biblioteca.
+requires-python = ">=3.12"
 license = { text = "MIT" }
 authors = [{ name = "Vitor Araújo" }]
 keywords = ["pncp", "licitacao", "governo", "compras publicas", "cli"]
@@ -16,7 +17,6 @@ classifiers = [
   "Environment :: Console",
   "Intended Audience :: End Users/Desktop",
   "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Topic :: Office/Business",
@@ -47,7 +47,7 @@ asyncio_mode = "auto"
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
