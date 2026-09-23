@@ -27,10 +27,25 @@ class LocalAdminMiddleware:
             login(request, user, backend="django.contrib.auth.backends.ModelBackend")
         return self.get_response(request)
 
+    # Cabeçalhos que só existem quando há proxy na frente. Atrás de um nginx no
+    # mesmo host, REMOTE_ADDR vira 127.0.0.1 para **todo** visitante: sozinho,
+    # ele deixaria de provar que o acesso é local e abriria o admin para a
+    # internet. A presença de qualquer um destes derruba o atalho.
+    proxy_headers = (
+        "HTTP_X_FORWARDED_FOR",
+        "HTTP_X_FORWARDED_HOST",
+        "HTTP_X_REAL_IP",
+        "HTTP_FORWARDED",
+    )
+
+    def _behind_proxy(self, request):
+        return any(request.META.get(header) for header in self.proxy_headers)
+
     def _should_login(self, request):
         return (
             settings.DEBUG
             and request.path.startswith("/admin/")
             and request.META.get("REMOTE_ADDR") in self.local_addresses
+            and not self._behind_proxy(request)
             and not (request.user.is_authenticated and request.user.is_staff)
         )

@@ -500,3 +500,41 @@ def test_exclusoes_cortam_os_falsos_positivos_observados():
         market = Market.objects.get(slug=slug)
         excluido = any(casa(texto, termo) for termo in market.exclusions)
         assert excluido is deve_sair, f"{slug}: {texto!r}"
+
+
+@pytest.mark.django_db
+@override_settings(DEBUG=True)
+def test_admin_local_abre_sem_credencial_na_propria_maquina():
+    resposta = Client(REMOTE_ADDR="127.0.0.1").get("/admin/")
+    assert resposta.status_code == 200
+
+
+@pytest.mark.django_db
+@override_settings(DEBUG=True)
+@pytest.mark.parametrize(
+    "cabecalho",
+    ["HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED_HOST", "HTTP_X_REAL_IP", "HTTP_FORWARDED"],
+)
+def test_admin_local_nao_abre_atras_de_proxy(cabecalho):
+    """Atrás de nginx no mesmo host, REMOTE_ADDR é 127.0.0.1 para todo mundo.
+
+    Sem esta trava, subir com RADAR_DEBUG=1 atrás de proxy abriria o painel
+    administrativo para a internet inteira.
+    """
+    cliente = Client(REMOTE_ADDR="127.0.0.1", **{cabecalho: "203.0.113.7"})
+    resposta = cliente.get("/admin/")
+    assert resposta.status_code != 200
+
+
+@pytest.mark.django_db
+@override_settings(DEBUG=True)
+def test_admin_local_nao_abre_de_fora():
+    resposta = Client(REMOTE_ADDR="203.0.113.7").get("/admin/")
+    assert resposta.status_code != 200
+
+
+@pytest.mark.django_db
+@override_settings(DEBUG=False)
+def test_admin_exige_login_fora_do_desenvolvimento():
+    resposta = Client(REMOTE_ADDR="127.0.0.1").get("/admin/")
+    assert resposta.status_code != 200

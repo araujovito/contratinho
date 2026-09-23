@@ -21,6 +21,9 @@ geral, mercados, oportunidades e usuários em um menu curto. Termos são editado
 em texto separado por vírgulas e mercados de uma oportunidade usam caixas de
 seleção simples. O usuário técnico `admin-local` não possui senha utilizável.
 Fora desse modo, a área exige uma conta administrativa autenticada normalmente.
+O atalho também é recusado quando a requisição chega com cabeçalho de proxy
+(`X-Forwarded-For` e equivalentes): atrás de um nginx no mesmo host, `REMOTE_ADDR`
+é `127.0.0.1` para todo visitante, e sozinho ele deixaria de provar acesso local.
 
 ## Coleta compartilhada
 
