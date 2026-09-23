@@ -1,0 +1,10 @@
+{% extends 'management/base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<section class="page-heading compact"><div><a class="back" href="{% url back_url %}">← Voltar</a><h1>{{ title }}</h1><p>{{ description }}</p></div></section>
+<form class="editor panel" method="post">{% csrf_token %}
+  {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+  {% for field in form %}<div class="field{% if field.field.widget.input_type == 'checkbox' %} check-field{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{{ field.errors }}</div>{% endfor %}
+  <div class="form-actions"><button class="primary">Salvar alterações</button><a href="{% url back_url %}">Cancelar</a></div>
+</form>
+{% endblock %}

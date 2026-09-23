@@ -64,25 +64,58 @@ def test_requires_login(client):
 
 @override_settings(DEBUG=True)
 def test_local_admin_opens_without_credentials(client):
-    response = client.get(reverse("admin:index"))
+    response = client.get(reverse("admin_dashboard"))
     assert response.status_code == 200
     assert response.wsgi_request.user.username == "admin-local"
     assert not response.wsgi_request.user.has_usable_password()
-    assert reverse("admin:web_market_changelist") in response.content.decode()
+    assert reverse("admin_markets") in response.content.decode()
 
 
 @override_settings(DEBUG=False)
 def test_admin_requires_staff_user_outside_local_development(client, user):
     client.force_login(user)
-    response = client.get(reverse("admin:index"))
+    response = client.get(reverse("admin_dashboard"))
     assert response.status_code == 302
 
     user.is_staff = True
     user.is_superuser = True
     user.save(update_fields=["is_staff", "is_superuser"])
-    response = client.get(reverse("admin:index"))
+    response = client.get(reverse("admin_dashboard"))
     assert response.status_code == 200
-    assert reverse("admin:web_market_changelist") in response.content.decode()
+    assert reverse("admin_markets") in response.content.decode()
+
+
+@override_settings(DEBUG=True)
+def test_management_market_editor_uses_plain_text_terms(client):
+    market = Market.objects.get(slug="graficos")
+    response = client.get(reverse("admin_market_edit", args=[market.pk]))
+    assert response.status_code == 200
+    assert "impressão, gráfica" in response.content.decode()
+
+    response = client.post(
+        reverse("admin_market_edit", args=[market.pk]),
+        {
+            "name": "Gráfica rápida",
+            "slug": "graficos",
+            "terms": "impressão, banner, cartão",
+            "exclusions": "toner, cartucho",
+        },
+    )
+    assert response.status_code == 302
+    market.refresh_from_db()
+    assert market.name == "Gráfica rápida"
+    assert market.terms == ["impressão", "banner", "cartão"]
+
+
+@override_settings(DEBUG=True)
+def test_management_opportunity_uses_checkboxes_for_markets(client, item):
+    publish([item])
+    opportunity = Opportunity.objects.get()
+    response = client.get(reverse("admin_opportunity_edit", args=[opportunity.pk]))
+    body = response.content.decode()
+    assert response.status_code == 200
+    assert 'type="checkbox"' in body
+    assert "selector-available" not in body
 
 
 def test_catalog_filter_follow_and_stage(client, user, item):

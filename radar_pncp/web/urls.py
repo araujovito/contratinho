@@ -1,11 +1,29 @@
-from django.contrib import admin
 from django.contrib.auth import views as auth
 from django.urls import path
 
-from . import views
+from . import admin_views, views
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("admin/", admin_views.dashboard, name="admin_dashboard"),
+    path("admin/mercados/", admin_views.markets, name="admin_markets"),
+    path("admin/mercados/novo/", admin_views.market_edit, name="admin_market_create"),
+    path(
+        "admin/mercados/<int:pk>/",
+        admin_views.market_edit,
+        name="admin_market_edit",
+    ),
+    path("admin/oportunidades/", admin_views.opportunities, name="admin_opportunities"),
+    path(
+        "admin/oportunidades/nova/",
+        admin_views.opportunity_edit,
+        name="admin_opportunity_create",
+    ),
+    path(
+        "admin/oportunidades/<int:pk>/",
+        admin_views.opportunity_edit,
+        name="admin_opportunity_edit",
+    ),
+    path("admin/usuarios/", admin_views.users, name="admin_users"),
     path("", views.home, name="home"),
     path("conta/criar/", views.signup, name="signup"),
     path("conta/entrar/", auth.LoginView.as_view(template_name="radar/login.html"), name="login"),

@@ -1,0 +1,32 @@
+{% extends 'management/base.html' %}
+{% block title %}Visão geral{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><h1>Visão geral</h1><p>O que está acontecendo no Radar agora.</p></div>
+</section>
+<section class="metrics" aria-label="Resumo">
+  <article><span>Oportunidades</span><strong>{{ opportunity_count }}</strong><small>no catálogo</small></article>
+  <article><span>Mercados</span><strong>{{ market_count }}</strong><small>áreas configuradas</small></article>
+  <article><span>Usuários</span><strong>{{ user_count }}</strong><small>pessoas cadastradas</small></article>
+  <article><span>Acompanhamentos</span><strong>{{ follow_count }}</strong><small>editais salvos</small></article>
+</section>
+<section class="dashboard-grid">
+  <article class="panel">
+    <div class="panel-title"><div><h2>Oportunidades recentes</h2><p>Últimos itens atualizados no catálogo</p></div><a href="{% url 'admin_opportunities' %}">Ver todas</a></div>
+    <div class="simple-list">
+      {% for item in latest %}
+      <a href="{% url 'admin_opportunity_edit' item.pk %}">
+        <span><strong>{{ item.title|truncatechars:72 }}</strong><small>{{ item.agency }} · {{ item.uf|default:'UF não informada' }}</small></span>
+        <time>{{ item.fetched_at|date:'d/m' }}</time>
+      </a>
+      {% empty %}<div class="empty"><strong>O catálogo ainda está vazio.</strong><span>A coleta trará as primeiras oportunidades.</span></div>{% endfor %}
+    </div>
+  </article>
+  <article class="panel">
+    <div class="panel-title"><div><h2>Mercados</h2><p>Distribuição atual do catálogo</p></div><a href="{% url 'admin_markets' %}">Gerenciar</a></div>
+    <div class="market-list">
+      {% for market in markets %}<a href="{% url 'admin_market_edit' market.pk %}"><span>{{ market.name }}</span><strong>{{ market.total }}</strong></a>{% empty %}<div class="empty">Nenhum mercado configurado.</div>{% endfor %}
+    </div>
+  </article>
+</section>
+{% endblock %}

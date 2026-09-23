@@ -15,10 +15,12 @@ Abra http://127.0.0.1:8000, crie uma conta com nome de usuário e senha,
 escolha mercado e estado. As migrações criam cinco mercados iniciais.
 O banco começa sem editais; nenhuma oportunidade fictícia é apresentada como real.
 
-O painel em http://127.0.0.1:8000/admin/ entra automaticamente quando
-`RADAR_DEBUG=1` e o acesso vem da própria máquina. O usuário técnico
-`admin-local` não possui senha utilizável. Fora desse modo, o Django exige uma
-conta administrativa autenticada normalmente.
+O painel próprio de gestão em http://127.0.0.1:8000/admin/ entra automaticamente
+quando `RADAR_DEBUG=1` e o acesso vem da própria máquina. Ele reúne uma visão
+geral, mercados, oportunidades e usuários em um menu curto. Termos são editados
+em texto separado por vírgulas e mercados de uma oportunidade usam caixas de
+seleção simples. O usuário técnico `admin-local` não possui senha utilizável.
+Fora desse modo, a área exige uma conta administrativa autenticada normalmente.
 
 ## Coleta compartilhada
 

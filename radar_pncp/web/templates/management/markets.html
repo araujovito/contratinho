@@ -1,0 +1,11 @@
+{% extends 'management/base.html' %}
+{% block title %}Mercados{% endblock %}
+{% block content %}
+<section class="page-heading"><div><h1>Mercados</h1><p>Organize como as oportunidades são agrupadas.</p></div><a class="primary" href="{% url 'admin_market_create' %}">Novo mercado</a></section>
+<div class="cards-grid">
+  {% for item in items %}<a class="market-card" href="{% url 'admin_market_edit' item.pk %}">
+    <span class="market-icon">{{ item.name|first|upper }}</span>
+    <div><h2>{{ item.name }}</h2><p>{{ item.terms|join:', '|truncatechars:90 }}</p><small>{{ item.opportunity_count }} oportunidades · {{ item.preference_count }} usuários</small></div>
+  </a>{% empty %}<div class="panel empty">Nenhum mercado configurado.</div>{% endfor %}
+</div>
+{% endblock %}

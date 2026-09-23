@@ -1,0 +1,9 @@
+{% extends 'management/base.html' %}
+{% block title %}Usuários{% endblock %}
+{% block content %}
+<section class="page-heading"><div><h1>Usuários</h1><p>Uma leitura simples de quem está usando o Radar.</p></div></section>
+<div class="panel table-wrap"><table><thead><tr><th>Usuário</th><th>Mercado</th><th>Região</th><th>Acompanhando</th><th>Desde</th></tr></thead><tbody>
+{% for item in items %}<tr><td><strong>{{ item.username }}</strong></td><td>{{ item.preference.market.name|default:'Não definido' }}</td><td>{{ item.preference.uf|default:'Todos os estados' }}</td><td>{{ item.follow_count }}</td><td>{{ item.date_joined|date:'d/m/Y' }}</td></tr>
+{% empty %}<tr><td colspan="5" class="empty">Nenhum usuário cadastrado.</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}
