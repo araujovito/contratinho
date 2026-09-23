@@ -1,0 +1,133 @@
+{
+  "data": [
+    {
+      "numeroControlePNCP": "12345678000190-1-000123/2026",
+      "anoCompra": 2026,
+      "sequencialCompra": 123,
+      "numeroCompra": "00012/2026",
+      "processo": "2026/0001234",
+      "objetoCompra": "Contratação de empresa especializada em serviços gráficos para impressão de cartilhas educativas da rede municipal de ensino",
+      "informacaoComplementar": "Tiragem estimada de 20.000 exemplares.",
+      "modalidadeId": 6,
+      "modalidadeNome": "Pregão - Eletrônico",
+      "dataPublicacaoPncp": "2026-09-15T09:00:00",
+      "dataAberturaProposta": "2026-09-16T08:00:00",
+      "dataEncerramentoProposta": "2026-10-01T09:00:00",
+      "dataAtualizacaoGlobal": "2026-09-15T09:00:00",
+      "valorTotalEstimado": 184500.0,
+      "valorTotalHomologado": null,
+      "srp": false,
+      "orgaoEntidade": {
+        "cnpj": "12345678000190",
+        "razaoSocial": "MUNICIPIO DE EXEMPLO",
+        "poderId": "E",
+        "esferaId": "M"
+      },
+      "unidadeOrgao": {
+        "ufSigla": "SP",
+        "ufNome": "São Paulo",
+        "municipioNome": "Exemplo",
+        "codigoUnidade": "1",
+        "nomeUnidade": "Secretaria Municipal de Educação"
+      }
+    },
+    {
+      "numeroControlePNCP": "12345678000190-1-000124/2026",
+      "anoCompra": 2026,
+      "sequencialCompra": 124,
+      "numeroCompra": "00013/2026",
+      "processo": "2026/0001235",
+      "objetoCompra": "Aquisição de impressoras multifuncionais e cartuchos de toner para as unidades administrativas",
+      "informacaoComplementar": null,
+      "modalidadeId": 6,
+      "modalidadeNome": "Pregão - Eletrônico",
+      "dataPublicacaoPncp": "2026-09-16T10:30:00",
+      "dataAberturaProposta": "2026-09-17T08:00:00",
+      "dataEncerramentoProposta": "2026-10-02T09:00:00",
+      "dataAtualizacaoGlobal": "2026-09-16T10:30:00",
+      "valorTotalEstimado": 96000.0,
+      "valorTotalHomologado": null,
+      "srp": false,
+      "orgaoEntidade": {
+        "cnpj": "12345678000190",
+        "razaoSocial": "MUNICIPIO DE EXEMPLO",
+        "poderId": "E",
+        "esferaId": "M"
+      },
+      "unidadeOrgao": {
+        "ufSigla": "SP",
+        "ufNome": "São Paulo",
+        "municipioNome": "Exemplo",
+        "codigoUnidade": "2",
+        "nomeUnidade": "Secretaria Municipal de Administração"
+      }
+    },
+    {
+      "numeroControlePNCP": "98765432000109-1-000045/2026",
+      "anoCompra": 2026,
+      "sequencialCompra": 45,
+      "numeroCompra": "00045/2026",
+      "processo": null,
+      "objetoCompra": "Registro de preços para fornecimento de papel sulfite A4 75g e papel offset",
+      "informacaoComplementar": "Sistema de Registro de Preços, vigência de 12 meses.",
+      "modalidadeId": 6,
+      "modalidadeNome": "Pregão - Eletrônico",
+      "dataPublicacaoPncp": "2026-09-17T14:00:00",
+      "dataAberturaProposta": "2026-09-18T08:00:00",
+      "dataEncerramentoProposta": "2026-10-05T09:00:00",
+      "dataAtualizacaoGlobal": "2026-09-17T14:00:00",
+      "valorTotalEstimado": 42000.0,
+      "valorTotalHomologado": null,
+      "srp": true,
+      "orgaoEntidade": {
+        "cnpj": "98765432000109",
+        "razaoSocial": "ESTADO DO CEARA",
+        "poderId": "E",
+        "esferaId": "E"
+      },
+      "unidadeOrgao": {
+        "ufSigla": "CE",
+        "ufNome": "Ceará",
+        "municipioNome": "Fortaleza",
+        "codigoUnidade": "10",
+        "nomeUnidade": "Secretaria de Planejamento"
+      }
+    },
+    {
+      "numeroControlePNCP": "11222333000144-1-000007/2026",
+      "anoCompra": 2026,
+      "sequencialCompra": 7,
+      "numeroCompra": "00007/2026",
+      "processo": null,
+      "objetoCompra": "Serviço de impressão de folders institucionais",
+      "informacaoComplementar": null,
+      "modalidadeId": 8,
+      "modalidadeNome": "Dispensa de Licitação",
+      "dataPublicacaoPncp": "2026-09-18T11:00:00",
+      "dataAberturaProposta": "2026-09-19T08:00:00",
+      "dataEncerramentoProposta": "2026-09-30T09:00:00",
+      "dataAtualizacaoGlobal": "2026-09-18T11:00:00",
+      "valorTotalEstimado": null,
+      "valorTotalHomologado": null,
+      "srp": false,
+      "orgaoEntidade": {
+        "cnpj": "11222333000144",
+        "razaoSocial": "MUNICIPIO DE MINAS EXEMPLO",
+        "poderId": "E",
+        "esferaId": "M"
+      },
+      "unidadeOrgao": {
+        "ufSigla": "MG",
+        "ufNome": "Minas Gerais",
+        "municipioNome": "Minas Exemplo",
+        "codigoUnidade": "3",
+        "nomeUnidade": "Gabinete do Prefeito"
+      }
+    }
+  ],
+  "totalRegistros": 4,
+  "totalPaginas": 1,
+  "numeroPagina": 1,
+  "paginasRestantes": 0,
+  "empty": false
+}
