@@ -580,3 +580,35 @@ def test_cadastro_recusa_email_repetido():
     )
     assert resposta.status_code == 200
     assert not User.objects.filter(username="segundo").exists()
+
+
+@pytest.mark.django_db
+def test_edital_com_prazo_vencido_avisa_no_acompanhamento(client, django_user_model):
+    """Quem acompanha continua vendo o cartão e precisa saber que fechou."""
+    market = Market.objects.get(slug="limpeza")
+    item = Opportunity.objects.create(
+        pncp_id="12345678000190-1-000099/2026",
+        title="Serviço de limpeza predial",
+        agency="Órgão exemplo",
+        uf="RJ",
+        deadline=timezone.localdate() - timedelta(days=1),
+        fetched_at=timezone.now(),
+    )
+    item.markets.add(market)
+    user = django_user_model.objects.create_user(
+        "seguidor", email="s@exemplo.com", password="senha-longa-2026"
+    )
+    Preference.objects.create(user=user, market=market, uf="RJ")
+    Follow.objects.create(user=user, opportunity=item)
+    client.force_login(user)
+
+    assert item.encerrado is True
+    assert "Prazo encerrado" in client.get("/acompanhando/").content.decode()
+    assert "Prazo encerrado" in client.get(f"/oportunidades/{item.pk}/").content.decode()
+
+
+@pytest.mark.django_db
+def test_edital_dentro_do_prazo_nao_e_marcado_como_encerrado():
+    item = Opportunity(deadline=timezone.localdate() + timedelta(days=1))
+    assert item.encerrado is False
+    assert Opportunity(deadline=None).encerrado is False

@@ -68,6 +68,16 @@ class Opportunity(models.Model):
             return None
         return (self.deadline - timezone.localdate()).days
 
+    @property
+    def encerrado(self):
+        """Prazo já passou.
+
+        A lista e o aviso por e-mail filtram isso, mas quem acompanha um edital
+        continua vendo o cartão — e precisa saber que ele fechou, em vez de
+        descobrir sozinho comparando a data com o calendário.
+        """
+        return self.days_remaining is not None and self.days_remaining < 0
+
 
 class Alert(models.Model):
     """Registro de que uma oportunidade já foi avisada a alguém.

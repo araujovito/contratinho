@@ -14,7 +14,7 @@
   <article class="opportunity-card">
     <div class="card-topline">
       <span class="match-badge">Combina com {{ preference.market.name|lower }}</span>
-      {% if item.days_remaining != None and item.days_remaining <= 3 %}<span class="urgent-badge">Prazo próximo</span>{% endif %}
+      {% if item.encerrado %}<span class="closed-badge">Prazo encerrado</span>{% elif item.days_remaining != None and item.days_remaining <= 3 %}<span class="urgent-badge">Prazo próximo</span>{% endif %}
     </div>
     <p class="agency">{{ item.agency }} · {{ item.uf|default:'Local não informado' }}</p>
     <h2><a href="{% url 'detail' item.pk %}">{{ item.plain_summary|default:item.readable_object }}</a></h2>

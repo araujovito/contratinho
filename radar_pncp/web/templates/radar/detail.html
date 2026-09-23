@@ -6,7 +6,7 @@
   <main class="detail-main">
     <div class="detail-badges">
       {% if match_terms %}<span class="match-badge">Encontrada para o seu mercado</span>{% endif %}
-      {% if item.days_remaining != None and item.days_remaining <= 3 %}<span class="urgent-badge">Prazo próximo</span>{% endif %}
+      {% if item.encerrado %}<span class="closed-badge">Prazo encerrado</span>{% elif item.days_remaining != None and item.days_remaining <= 3 %}<span class="urgent-badge">Prazo próximo</span>{% endif %}
     </div>
     <p class="agency">{{ item.agency }} · {{ item.uf|default:'Local não informado' }}</p>
     {% if item.plain_summary %}
@@ -30,7 +30,7 @@
     <p class="eyebrow">RESUMO DA OPORTUNIDADE</p>
     <dl>
       <div><dt>Valor estimado</dt><dd>{% if item.value != None %}R$ {{ item.value|floatformat:2 }}{% else %}Não informado pelo órgão{% endif %}</dd></div>
-      <div><dt>Prazo para agir</dt><dd>{% if item.deadline %}{{ item.deadline|date:'d/m/Y' }}{% if not item.has_official_dates %}<br><small class="muted">data ainda não confirmada na fonte oficial</small>{% endif %}{% else %}Confira no edital{% endif %}</dd></div>
+      <div><dt>Prazo para agir</dt><dd>{% if item.encerrado %}<strong>Encerrado em {{ item.deadline|date:'d/m/Y' }}</strong><br><small class="muted">não é mais possível enviar proposta</small>{% elif item.deadline %}{{ item.deadline|date:'d/m/Y' }}{% if not item.has_official_dates %}<br><small class="muted">data ainda não confirmada na fonte oficial</small>{% endif %}{% else %}Confira no edital{% endif %}</dd></div>
       <div><dt>Início das propostas</dt><dd>{{ item.proposal_opening_date|date:'d/m/Y'|default:'Não informado' }}</dd></div>
       <div><dt>Publicação</dt><dd>{{ item.publication_date|date:'d/m/Y'|default:'Não informada' }}</dd></div>
       <div><dt>Local</dt><dd>{{ item.uf|default:'Não informado' }}</dd></div>
