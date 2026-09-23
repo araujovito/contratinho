@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "radar-pncp"
+name = "contratinho"
 version = "0.1.0"
 description = "Radar de licitações abertas do PNCP: filtra editais por perfil e avisa só o que é novo."
 readme = "README.md"
@@ -35,19 +35,19 @@ dev = ["pytest>=8.0", "pytest-asyncio>=0.23", "pytest-django>=4.9", "ruff>=0.5"]
 web = ["Django>=5.2,<5.3", "dj-database-url>=2.3,<4", "psycopg[binary]>=3.2,<4"]
 
 [project.scripts]
-radar = "radar_pncp.cli:app"
+contratinho = "contratinho.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/araujovito/radar-pncp"
-Issues = "https://github.com/araujovito/radar-pncp/issues"
+Homepage = "https://github.com/araujovito/contratinho"
+Issues = "https://github.com/araujovito/contratinho/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["radar_pncp"]
+packages = ["contratinho"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
-DJANGO_SETTINGS_MODULE = "radar_pncp.web.settings"
+DJANGO_SETTINGS_MODULE = "contratinho.web.settings"
 
 [tool.ruff]
 line-length = 100

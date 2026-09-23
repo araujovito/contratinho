@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from radar_pncp import config as cfg
+from contratinho import config as cfg
 
 MINIMO = """
 [[perfil]]
@@ -12,7 +12,7 @@ termos = ["impressão"]
 
 
 def test_exemplo_gerado_pelo_init_e_valido():
-    # se `radar init` cuspir um arquivo que não carrega, o projeto não anda
+    # se `contratinho init` cuspir um arquivo que não carrega, o projeto não anda
     configuracao = cfg.carregar_texto(cfg.EXEMPLO)
     assert [p.nome for p in configuracao.perfil] == ["impressos", "papel"]
 
@@ -80,11 +80,11 @@ def test_toml_malformado_falha():
 
 
 def test_arquivo_ausente_menciona_init(tmp_path):
-    with pytest.raises(cfg.ConfigError, match="radar init"):
+    with pytest.raises(cfg.ConfigError, match="contratinho init"):
         cfg.carregar(tmp_path / "nao_existe.toml")
 
 
 def test_carregar_le_do_disco(tmp_path):
-    arquivo = tmp_path / "radar.toml"
+    arquivo = tmp_path / "contratinho.toml"
     arquivo.write_text(MINIMO, encoding="utf-8")
     assert cfg.carregar(arquivo).perfil[0].nome == "impressos"

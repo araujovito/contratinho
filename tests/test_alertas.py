@@ -12,8 +12,8 @@ from django.core import mail
 from django.core.management import call_command
 from django.utils import timezone
 
-from radar_pncp.web import alertas
-from radar_pncp.web.models import Alert, Market, Opportunity, Preference
+from contratinho.web import alertas
+from contratinho.web.models import Alert, Market, Opportunity, Preference
 
 pytestmark = pytest.mark.django_db
 

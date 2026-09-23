@@ -51,7 +51,7 @@ orientada a consulta pública e expõe a linguagem original da contratação.
 
 ## Posição escolhida
 
-> O Radar PNCP ajuda uma pessoa comum a descobrir se o governo está comprando o que ela
+> O Contratinho ajuda uma pessoa comum a descobrir se o governo está comprando o que ela
 > vende, entender a oportunidade e saber qual é o próximo passo.
 
 O produto não tentará ser uma mesa completa de pregão nesta fase. Sua vantagem será a

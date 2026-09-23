@@ -8,10 +8,10 @@ import pytest
 from exemplos import CONFIG_TESTE
 from typer.testing import CliRunner
 
-from radar_pncp import config as cfg
-from radar_pncp import fonte
-from radar_pncp.cli import app
-from radar_pncp.filtro import Licitacao
+from contratinho import config as cfg
+from contratinho import fonte
+from contratinho.cli import app
+from contratinho.filtro import Licitacao
 
 runner = CliRunner()
 FIXTURE = Path(__file__).parent / "fixtures" / "contratacoes_proposta.json"
@@ -19,7 +19,7 @@ FIXTURE = Path(__file__).parent / "fixtures" / "contratacoes_proposta.json"
 
 @pytest.fixture
 def pncp_falso(monkeypatch):
-    """`radar check` sem rede: devolve a fixture já traduzida."""
+    """`contratinho check` sem rede: devolve a fixture já traduzida."""
     from pypncp.models import Contratacao
 
     bruto = json.loads(FIXTURE.read_text(encoding="utf-8"))["data"]
@@ -29,14 +29,14 @@ def pncp_falso(monkeypatch):
 
 
 def test_init_cria_config_valido(tmp_path):
-    destino = tmp_path / "radar.toml"
+    destino = tmp_path / "contratinho.toml"
     resultado = runner.invoke(app, ["init", "--config", str(destino)])
     assert resultado.exit_code == 0
     assert cfg.carregar(destino).perfil  # o que foi gerado carrega
 
 
 def test_init_nao_sobrescreve_sem_force(tmp_path):
-    destino = tmp_path / "radar.toml"
+    destino = tmp_path / "contratinho.toml"
     destino.write_text("# meu arquivo\n", encoding="utf-8")
     resultado = runner.invoke(app, ["init", "--config", str(destino)])
     assert resultado.exit_code == 1
@@ -50,13 +50,13 @@ def test_init_nao_sobrescreve_sem_force(tmp_path):
 def test_check_sem_config_orienta_a_rodar_init(tmp_path):
     resultado = runner.invoke(app, ["check", "--config", str(tmp_path / "nada.toml")])
     assert resultado.exit_code == 1
-    assert "radar init" in resultado.output
+    assert "contratinho init" in resultado.output
 
 
 def test_check_imprime_e_nao_repete(tmp_path, pncp_falso):
-    config = tmp_path / "radar.toml"
+    config = tmp_path / "contratinho.toml"
     config.write_text(CONFIG_TESTE, encoding="utf-8")
-    banco = tmp_path / "radar.db"
+    banco = tmp_path / "contratinho.db"
     argumentos = ["check", "--config", str(config), "--db", str(banco)]
 
     primeira = runner.invoke(app, argumentos)
@@ -69,9 +69,9 @@ def test_check_imprime_e_nao_repete(tmp_path, pncp_falso):
 
 
 def test_seco_nao_grava_estado(tmp_path, pncp_falso):
-    config = tmp_path / "radar.toml"
+    config = tmp_path / "contratinho.toml"
     config.write_text(CONFIG_TESTE, encoding="utf-8")
-    banco = tmp_path / "radar.db"
+    banco = tmp_path / "contratinho.db"
     argumentos = ["check", "--config", str(config), "--db", str(banco), "--seco"]
 
     runner.invoke(app, argumentos)
@@ -80,7 +80,7 @@ def test_seco_nao_grava_estado(tmp_path, pncp_falso):
 
 
 def test_falha_de_rede_sai_com_codigo_2(tmp_path, monkeypatch):
-    config = tmp_path / "radar.toml"
+    config = tmp_path / "contratinho.toml"
     config.write_text(CONFIG_TESTE, encoding="utf-8")
 
     def explodir(*_a, **_k):
@@ -93,7 +93,7 @@ def test_falha_de_rede_sai_com_codigo_2(tmp_path, monkeypatch):
 
 
 def test_config_invalido_sai_com_codigo_1(tmp_path):
-    config = tmp_path / "radar.toml"
+    config = tmp_path / "contratinho.toml"
     config.write_text('[radar]\nuf = ["XX"]\n[[perfil]]\nnome="a"\ntermos=["b"]\n', "utf-8")
     resultado = runner.invoke(app, ["check", "--config", str(config)])
     assert resultado.exit_code == 1
@@ -106,15 +106,15 @@ def test_version():
 
 
 def test_moeda_no_formato_brasileiro():
-    from radar_pncp.saida import moeda
+    from contratinho.saida import moeda
 
     assert moeda(184500.0) == "R$ 184.500,00"
     assert moeda(None) == "—"
 
 
 def test_saida_nao_quebra_sem_uf_nem_url():
-    from radar_pncp.filtro import Achado
-    from radar_pncp.saida import imprimir_achados
+    from contratinho.filtro import Achado
+    from contratinho.saida import imprimir_achados
 
     licitacao = Licitacao(
         id="x",

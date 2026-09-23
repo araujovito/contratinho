@@ -12,10 +12,10 @@ from django.test import Client, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
-from radar_pncp.filtro import Licitacao
-from radar_pncp.web.ingestion import publish
-from radar_pncp.web.models import Follow, Market, Opportunity, Preference
-from radar_pncp.web.portal import buscar_mercados
+from contratinho.filtro import Licitacao
+from contratinho.web.ingestion import publish
+from contratinho.web.models import Follow, Market, Opportunity, Preference
+from contratinho.web.portal import buscar_mercados
 
 pytestmark = pytest.mark.django_db
 
@@ -262,7 +262,7 @@ def test_failed_batch_rolls_back(item):
 
 def test_failed_network_keeps_catalog(item):
     publish([item])
-    with patch("radar_pncp.fonte.buscar", side_effect=TimeoutError), pytest.raises(CommandError):
+    with patch("contratinho.fonte.buscar", side_effect=TimeoutError), pytest.raises(CommandError):
         call_command("sync_pncp", fonte="consulta")
     assert Opportunity.objects.count() == 1
 
@@ -357,7 +357,7 @@ def test_summary_command_persists_structured_result(item, monkeypatch):
         cautions=["Confira as quantidades"],
     )
     with patch(
-        "radar_pncp.web.management.commands.summarize_opportunities.summarize", return_value=result
+        "contratinho.web.management.commands.summarize_opportunities.summarize", return_value=result
     ):
         call_command("summarize_opportunities", limit=1)
     opportunity = Opportunity.objects.get()
@@ -393,7 +393,7 @@ def test_pagination_and_escaping(client, user, item):
 @pytest.fixture
 def oportunidade_logada(client, django_user_model):
     """Usuário com interesse definido e uma oportunidade que casa com ele."""
-    from radar_pncp.web.models import Market, Preference
+    from contratinho.web.models import Market, Preference
 
     market = Market.objects.create(name="Limpeza teste", slug="limpeza-teste", terms=["limpeza"])
     item = Opportunity.objects.create(
@@ -426,7 +426,7 @@ def test_detail_busca_dados_oficiais_no_primeiro_clique(client, oportunidade_log
         opportunity.save()
         return True
 
-    with patch("radar_pncp.web.documentos.enriquecer", side_effect=falso) as consulta:
+    with patch("contratinho.web.documentos.enriquecer", side_effect=falso) as consulta:
         resposta = client.get(f"/oportunidades/{item.pk}/")
 
     assert consulta.called
@@ -444,7 +444,7 @@ def test_detail_continua_de_pe_com_pncp_fora_do_ar(client, oportunidade_logada):
         def get(self, url, timeout=None):
             raise RequestsError("sem resposta")
 
-    with patch("radar_pncp.web.documentos.requests.Session", return_value=Morto()):
+    with patch("contratinho.web.documentos.requests.Session", return_value=Morto()):
         resposta = client.get(f"/oportunidades/{item.pk}/")
 
     assert resposta.status_code == 200
@@ -459,7 +459,7 @@ def test_detail_nao_reconsulta_em_clique_seguido(client, oportunidade_logada):
     item.enrichment_checked_at = timezone.now()
     item.save()
 
-    with patch("radar_pncp.web.documentos.enriquecer") as consulta:
+    with patch("contratinho.web.documentos.enriquecer") as consulta:
         client.get(f"/oportunidades/{item.pk}/")
 
     assert not consulta.called
@@ -486,7 +486,7 @@ def test_informatica_segue_sem_exclusao_de_proposito():
 @pytest.mark.django_db
 def test_exclusoes_cortam_os_falsos_positivos_observados():
     """Cada caso abaixo apareceu de verdade no catálogo do RJ em 23/09/2026."""
-    from radar_pncp.filtro import casa
+    from contratinho.filtro import casa
 
     casos = [
         ("limpeza", "Rolete de limpeza contínua; cartuchos de fitas", True),
@@ -519,7 +519,7 @@ def test_admin_local_abre_sem_credencial_na_propria_maquina():
 def test_admin_local_nao_abre_atras_de_proxy(cabecalho):
     """Atrás de nginx no mesmo host, REMOTE_ADDR é 127.0.0.1 para todo mundo.
 
-    Sem esta trava, subir com RADAR_DEBUG=1 atrás de proxy abriria o painel
+    Sem esta trava, subir com CONTRATINHO_DEBUG=1 atrás de proxy abriria o painel
     administrativo para a internet inteira.
     """
     cliente = Client(REMOTE_ADDR="127.0.0.1", **{cabecalho: "203.0.113.7"})

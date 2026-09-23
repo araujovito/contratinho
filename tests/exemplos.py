@@ -1,6 +1,6 @@
 """Configuração usada pelos testes.
 
-Separada de `cfg.EXEMPLO` de propósito: o arquivo que o `radar init` gera
+Separada de `cfg.EXEMPLO` de propósito: o arquivo que o `contratinho init` gera
 acompanha o escopo do momento (hoje, RJ até R$ 250 mil) e vai mudar. Os testes
 de filtro, fonte e CLI exercitam o mecanismo, não o escopo — acoplá-los ao
 padrão faria cada ajuste de escopo quebrar meia suíte sem nenhum bug junto.

@@ -1,4 +1,4 @@
-# radar-pncp
+# contratinho
 
 > Em evolução para um produto web: conta, escolha de mercado e acompanhamento
 > pessoal de editais. A versão web atual é experimental e local.
@@ -12,17 +12,17 @@ Quem esquece de olhar, perde o prazo. O radar faz essa varredura uma vez por
 execução, filtra pelo que você definiu num arquivo de regras, e imprime **só o
 que é novo** — o que já foi avisado não volta.
 
-O `radar init` já sai com um escopo estreito: **contratos de até R$ 250 mil no
+O `contratinho init` já sai com um escopo estreito: **contratos de até R$ 250 mil no
 Rio de Janeiro**. É um recorte de partida, não um limite do programa — ampliar
-é editar duas linhas do `radar.toml`. Começar largo é receber cem avisos no
+é editar duas linhas do `contratinho.toml`. Começar largo é receber cem avisos no
 primeiro dia e parar de ler todos eles.
 
 ## Em três comandos
 
 ```bash
-pip install radar-pncp     # requer Python 3.12+
-radar init          # cria radar.toml com um exemplo comentado
-radar check         # consulta o PNCP e imprime as licitações novas
+pip install contratinho     # requer Python 3.12+
+contratinho init          # cria contratinho.toml com um exemplo comentado
+contratinho check         # consulta o PNCP e imprime as licitações novas
 ```
 
 Saída:
@@ -44,7 +44,7 @@ Rodar de novo no mesmo dia não repete nada. É isso que torna o comando
 agendável: coloque no cron e só receba e-mail do cron quando houver saída.
 
 ```cron
-0 8 * * 1-5  cd /home/voce/radar && radar check
+0 8 * * 1-5  cd /home/voce/contratinho && contratinho check
 ```
 
 ## As regras
@@ -125,7 +125,7 @@ perder o prazo custa dinheiro.
 
 ```bash
 pip install -e ".[dev,web]"
-export RADAR_DEBUG=1
+export CONTRATINHO_DEBUG=1
 pytest          # não toca a rede: as respostas do PNCP vêm de tests/fixtures/
 ruff check .
 ```

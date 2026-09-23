@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     env:
-      RADAR_DEBUG: "1"
+      CONTRATINHO_DEBUG: "1"
     runs-on: ubuntu-latest
     strategy:
       matrix:

@@ -6,8 +6,8 @@ build/
 *.egg-info/
 .pytest_cache/
 .ruff_cache/
-radar.toml
-radar.db
+contratinho.toml
+contratinho.db
 
 *.sqlite3
 .env

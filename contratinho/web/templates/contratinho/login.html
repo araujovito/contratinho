@@ -1,0 +1,1 @@
+{% extends 'contratinho/base.html' %}{% block content %}<section class="form-panel"><h1>Bom ter você de volta.</h1><form method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}"><button>Entrar</button></form><p>Ainda não tem conta? <a href="{% url 'signup' %}">Comece aqui</a>.</p></section>{% endblock %}

@@ -11,8 +11,8 @@ from datetime import date, timedelta
 import pytest
 from django.utils import timezone
 
-from radar_pncp.web import documentos
-from radar_pncp.web.models import Opportunity
+from contratinho.web import documentos
+from contratinho.web.models import Opportunity
 
 DETALHE = {
     "dataAberturaProposta": "2026-09-18T08:00:00",

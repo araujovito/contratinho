@@ -1,4 +1,4 @@
-# Radar PNCP: direção do produto
+# Contratinho: direção do produto
 
 ## Público e proposta
 Pessoas com renda que desejam começar a fornecer ao governo e pequenos

@@ -6,7 +6,7 @@ Requer Python 3.12 ou 3.13. Na raiz do repositório:
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev,web]"
-export RADAR_DEBUG=1
+export CONTRATINHO_DEBUG=1
 python manage.py migrate
 python manage.py runserver 127.0.0.1:8000
 ```
@@ -16,7 +16,7 @@ escolha mercado e estado. As migrações criam cinco mercados iniciais.
 O banco começa sem editais; nenhuma oportunidade fictícia é apresentada como real.
 
 O painel próprio de gestão em http://127.0.0.1:8000/admin/ entra automaticamente
-quando `RADAR_DEBUG=1` e o acesso vem da própria máquina. Ele reúne uma visão
+quando `CONTRATINHO_DEBUG=1` e o acesso vem da própria máquina. Ele reúne uma visão
 geral, mercados, oportunidades e usuários em um menu curto. Termos são editados
 em texto separado por vírgulas e mercados de uma oportunidade usam caixas de
 seleção simples. O usuário técnico `admin-local` não possui senha utilizável.
@@ -80,7 +80,7 @@ As datas de proposta e o valor estimado existem na rota de item
 clique do detalhe — o momento em que o usuário decide e a consulta se paga —
 e não durante a coleta.
 
-`radar_pncp/web/documentos.py` faz **uma** tentativa, com timeout de oito
+`contratinho/web/documentos.py` faz **uma** tentativa, com timeout de oito
 segundos e sem retentativa: a chamada roda dentro da requisição web. Quando
 falha, a página mantém o que já tinha, marca a data como não confirmada e
 oferece o link do portal. `enrichment_checked_at` é gravado mesmo no fracasso,
@@ -107,13 +107,13 @@ python manage.py send_alerts --seco    # mostra o que sairia, sem enviar
 python manage.py send_alerts
 ```
 
-Sem `RADAR_SMTP_HOST`, o Django imprime a mensagem no terminal: dá para ler o
+Sem `CONTRATINHO_SMTP_HOST`, o Django imprime a mensagem no terminal: dá para ler o
 alerta inteiro sem configurar nada. Para enviar de verdade:
 
-- `RADAR_SMTP_HOST`, `RADAR_SMTP_PORT` (padrão 587), `RADAR_SMTP_USER`,
-  `RADAR_SMTP_PASSWORD`, `RADAR_SMTP_TLS` (padrão ligado).
-- `RADAR_FROM_EMAIL`: remetente.
-- `RADAR_SITE_URL`: endereço público, porque o e-mail é lido fora do navegador
+- `CONTRATINHO_SMTP_HOST`, `CONTRATINHO_SMTP_PORT` (padrão 587), `CONTRATINHO_SMTP_USER`,
+  `CONTRATINHO_SMTP_PASSWORD`, `CONTRATINHO_SMTP_TLS` (padrão ligado).
+- `CONTRATINHO_FROM_EMAIL`: remetente.
+- `CONTRATINHO_SITE_URL`: endereço público, porque o e-mail é lido fora do navegador
   e link relativo não serve.
 
 Cada pessoa recebe no máximo oito oportunidades por mensagem; o resto fica no
@@ -136,7 +136,7 @@ uma explicação curta, pontos principais e alertas em campos próprios:
 
 ```bash
 export OPENAI_API_KEY="..."
-export RADAR_AI_MODEL="gpt-4o-mini"  # opcional
+export CONTRATINHO_AI_MODEL="gpt-4o-mini"  # opcional
 python manage.py summarize_opportunities --limit 20
 ```
 
@@ -150,18 +150,18 @@ depende de uma rota de documentos estável no PNCP.
 ## Verificação
 
 ```bash
-RADAR_DEBUG=1 pytest -q
+CONTRATINHO_DEBUG=1 pytest -q
 ruff check .
 ruff format --check .
-RADAR_DEBUG=1 python manage.py check
-RADAR_DEBUG=1 python manage.py makemigrations --check --dry-run
+CONTRATINHO_DEBUG=1 python manage.py check
+CONTRATINHO_DEBUG=1 python manage.py makemigrations --check --dry-run
 ```
 
 ## Configuração e próximos requisitos de operação
 
-- `RADAR_DEBUG=1`: exclusivamente local; padrão é desativado.
-- `RADAR_SECRET_KEY`: segredo obrigatório fora do desenvolvimento, nunca versionar.
-- `RADAR_ALLOWED_HOSTS`: hosts permitidos separados por vírgula.
+- `CONTRATINHO_DEBUG=1`: exclusivamente local; padrão é desativado.
+- `CONTRATINHO_SECRET_KEY`: segredo obrigatório fora do desenvolvimento, nunca versionar.
+- `CONTRATINHO_ALLOWED_HOSTS`: hosts permitidos separados por vírgula.
 - `DATABASE_URL`: conexão PostgreSQL; sem ela, usa SQLite local.
 
 Produção usa cookies seguros, redirecionamento HTTPS e HSTS. Configurar TLS,

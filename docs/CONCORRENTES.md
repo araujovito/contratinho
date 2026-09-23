@@ -99,7 +99,7 @@ O que isso ganha:
 - **Dá uma frase que nenhum concorrente pode copiar sem se contradizer.** Quem
   vende cobertura de 6.000 portais não vai dizer "mostramos menos coisas para
   você, de propósito".
-- **O código já está a meio caminho.** `modalidades = [8]` no `radar.toml` é
+- **O código já está a meio caminho.** `modalidades = [8]` no `contratinho.toml` é
   dispensa; o filtro por valor existe; o recorte por UF existe.
 
 O que isso custa: o mercado endereçável fica menor, e o usuário que der certo
@@ -108,7 +108,7 @@ não um produto para a vida toda — e isso precisa ser aceito conscientemente.
 
 ## O que muda no roadmap, se o norte for aceito
 
-1. **Trocar o teto de R$ 250 mil por R$ 80 mil** no padrão do `radar init` e no
+1. **Trocar o teto de R$ 250 mil por R$ 80 mil** no padrão do `contratinho init` e no
    MVP web, com a explicação: acima disso, empresa grande entra na disputa.
 2. **Marcar no cartão se o edital é exclusivo ME/EPP.** É a informação que mais
    muda a decisão de quem está começando, e ninguém destaca isso.

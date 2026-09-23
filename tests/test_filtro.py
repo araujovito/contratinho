@@ -5,8 +5,8 @@ from datetime import date
 import pytest
 from exemplos import CONFIG_TESTE
 
-from radar_pncp import config as cfg
-from radar_pncp.filtro import (
+from contratinho import config as cfg
+from contratinho.filtro import (
     Licitacao,
     aplicar_perfil,
     casa,

@@ -12,9 +12,9 @@ from exemplos import CONFIG_TESTE
 from pypncp import PNCPClient
 from pypncp.models import Contratacao
 
-from radar_pncp import config as cfg
-from radar_pncp import fonte
-from radar_pncp.filtro import filtrar
+from contratinho import config as cfg
+from contratinho import fonte
+from contratinho.filtro import filtrar
 
 CONFIG = cfg.carregar_texto(CONFIG_TESTE)
 
