@@ -62,16 +62,26 @@ def market_edit(request, pk=None):
 @staff_required
 def opportunities(request):
     query = request.GET.get("q", "").strip()
+    market_slug = request.GET.get("mercado", "").strip()
+    selected_market = None
     items = Opportunity.objects.prefetch_related("markets")
+    if market_slug:
+        selected_market = get_object_or_404(Market, slug=market_slug)
+        items = items.filter(markets=selected_market)
     if query:
         items = items.filter(
             Q(title__icontains=query) | Q(agency__icontains=query) | Q(pncp_id__icontains=query)
         )
-    page = Paginator(items, 25).get_page(request.GET.get("page"))
+    page = Paginator(items.distinct(), 25).get_page(request.GET.get("page"))
     return render(
         request,
         "management/opportunities.html",
-        {"section": "opportunities", "page": page, "query": query},
+        {
+            "section": "opportunities",
+            "page": page,
+            "query": query,
+            "selected_market": selected_market,
+        },
     )
 
 

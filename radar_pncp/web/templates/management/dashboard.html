@@ -5,10 +5,10 @@
   <div><h1>Visão geral</h1><p>O que está acontecendo no Radar agora.</p></div>
 </section>
 <section class="metrics" aria-label="Resumo">
-  <article><span>Oportunidades</span><strong>{{ opportunity_count }}</strong><small>no catálogo</small></article>
-  <article><span>Mercados</span><strong>{{ market_count }}</strong><small>áreas configuradas</small></article>
-  <article><span>Usuários</span><strong>{{ user_count }}</strong><small>pessoas cadastradas</small></article>
-  <article><span>Acompanhamentos</span><strong>{{ follow_count }}</strong><small>editais salvos</small></article>
+  <a href="{% url 'admin_opportunities' %}"><span>Oportunidades</span><strong>{{ opportunity_count }}</strong><small>no catálogo</small></a>
+  <a href="{% url 'admin_markets' %}"><span>Mercados</span><strong>{{ market_count }}</strong><small>áreas configuradas</small></a>
+  <a href="{% url 'admin_users' %}"><span>Usuários</span><strong>{{ user_count }}</strong><small>pessoas cadastradas</small></a>
+  <a href="{% url 'admin_users' %}"><span>Acompanhamentos</span><strong>{{ follow_count }}</strong><small>editais salvos</small></a>
 </section>
 <section class="dashboard-grid">
   <article class="panel">
@@ -25,7 +25,7 @@
   <article class="panel">
     <div class="panel-title"><div><h2>Mercados</h2><p>Distribuição atual do catálogo</p></div><a href="{% url 'admin_markets' %}">Gerenciar</a></div>
     <div class="market-list">
-      {% for market in markets %}<a href="{% url 'admin_market_edit' market.pk %}"><span>{{ market.name }}</span><strong>{{ market.total }}</strong></a>{% empty %}<div class="empty">Nenhum mercado configurado.</div>{% endfor %}
+      {% for market in markets %}<a href="{% url 'admin_opportunities' %}?mercado={{ market.slug|urlencode }}"><span>{{ market.name }}</span><strong>{{ market.total }}</strong></a>{% empty %}<div class="empty">Nenhum mercado configurado.</div>{% endfor %}
     </div>
   </article>
 </section>

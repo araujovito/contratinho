@@ -118,6 +118,25 @@ def test_management_opportunity_uses_checkboxes_for_markets(client, item):
     assert "selector-available" not in body
 
 
+@override_settings(DEBUG=True)
+def test_market_card_opens_only_its_opportunities(client, item):
+    publish(
+        [
+            item,
+            replace(item, id="informatica-1", objeto="Suporte técnico de informática"),
+        ]
+    )
+    market = Market.objects.get(slug="graficos")
+    market_page = client.get(reverse("admin_markets"))
+    expected_url = f"{reverse('admin_opportunities')}?mercado={market.slug}"
+    assert expected_url in market_page.content.decode()
+
+    response = client.get(reverse("admin_opportunities"), {"mercado": market.slug})
+    assert response.status_code == 200
+    assert [opportunity.pncp_id for opportunity in response.context["page"]] == [item.id]
+    assert response.context["selected_market"] == market
+
+
 def test_catalog_filter_follow_and_stage(client, user, item):
     publish(
         [
