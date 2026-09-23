@@ -194,8 +194,17 @@ def test_catalog_filter_follow_and_stage(client, user, item):
     client.force_login(user)
     response = client.get(reverse("opportunities"))
     assert [i.pncp_id for i in response.context["page"]] == [item.id]
+    body = response.content.decode()
+    assert "Entender oportunidade" in body
+    assert "Por que apareceu" in body
+    assert "Ver no PNCP" in body
     opportunity = Opportunity.objects.get(pncp_id=item.id)
-    assert client.get(reverse("detail", args=[opportunity.pk])).status_code == 200
+    detail_response = client.get(reverse("detail", args=[opportunity.pk]))
+    assert detail_response.status_code == 200
+    detail_body = detail_response.content.decode()
+    assert "RESUMO DA OPORTUNIDADE" in detail_body
+    assert "Objeto publicado pelo órgão" in detail_body
+    assert "Calcule se vale a pena" in detail_body
     url = reverse("follow", args=[opportunity.pk])
     assert client.get(url).status_code == 405
     client.post(url)
@@ -333,7 +342,7 @@ def test_ai_summary_is_shown_with_original_and_official_link(client, user, item)
     body = client.get(reverse("detail", args=[opportunity.pk])).content.decode()
     assert "EM LINGUAGEM SIMPLES" in body
     assert "Entrega no Rio de Janeiro" in body
-    assert "Ver objeto original publicado" in body
+    assert "Objeto publicado pelo órgão" in body
     assert "Ler edital completo no PNCP" in body
 
 

@@ -1,1 +1,44 @@
-{% extends 'radar/base.html' %}{% block content %}<a href="{% url 'opportunities' %}">← Oportunidades</a><p class="eyebrow">{{ item.uf }} · {{ item.agency }}</p>{% if item.plain_summary %}<section class="plain-summary"><p class="eyebrow">EM LINGUAGEM SIMPLES</p><h1>{{ item.plain_summary }}</h1>{% if item.key_points %}<h2>O que você precisa saber</h2><ul>{% for point in item.key_points %}<li>{{ point }}</li>{% endfor %}</ul>{% endif %}{% if item.cautions %}<h2>Confira antes de participar</h2><ul>{% for caution in item.cautions %}<li>{{ caution }}</li>{% endfor %}</ul>{% endif %}<small>Resumo automático para facilitar a leitura. Confirme todas as informações no edital oficial.</small></section><details><summary>Ver objeto original publicado</summary><p>{{ item.title }}</p></details>{% else %}<h1>{{ item.readable_object }}</h1>{% endif %}{% include 'radar/facts.html' %}<p>Identificador PNCP: {{ item.pncp_id }}</p>{% if item.official_url %}<p><a class="button" href="{{ item.official_url }}" target="_blank" rel="noopener noreferrer">Ler edital completo no PNCP ↗</a></p>{% endif %}{% if not follow %}<form method="post" action="{% url 'follow' item.pk %}">{% csrf_token %}<button>Acompanhar edital</button></form>{% else %}<a href="{% url 'following' %}">Ver meu acompanhamento</a>{% endif %}<article><h2>Antes de preparar sua proposta</h2><p>Leia o edital completo, confira o prazo, o local de atendimento e os documentos exigidos. O valor estimado não é uma previsão de lucro.</p></article>{% endblock %}
+{% extends 'radar/base.html' %}
+{% block title %}Entenda a oportunidade · Radar PNCP{% endblock %}
+{% block content %}
+<a class="back-link" href="{% url 'opportunities' %}">← Voltar para oportunidades</a>
+<div class="detail-layout">
+  <main class="detail-main">
+    <div class="detail-badges">
+      {% if match_terms %}<span class="match-badge">Encontrada para o seu mercado</span>{% endif %}
+      {% if item.days_remaining != None and item.days_remaining <= 3 %}<span class="urgent-badge">Prazo próximo</span>{% endif %}
+    </div>
+    <p class="agency">{{ item.agency }} · {{ item.uf|default:'Local não informado' }}</p>
+    {% if item.plain_summary %}
+      <p class="eyebrow">EM LINGUAGEM SIMPLES</p>
+      <h1>{{ item.plain_summary }}</h1>
+      <p class="automation-note">Explicação automática para facilitar a leitura. Confirme as informações no edital oficial.</p>
+    {% else %}
+      <p class="eyebrow">O QUE O ÓRGÃO PRECISA</p>
+      <h1>{{ item.readable_object }}</h1>
+    {% endif %}
+    {% if match_terms %}<p class="match-reason"><strong>Por que apareceu para você:</strong> encontramos “{{ match_terms|join:'”, “' }}” no objeto publicado.</p>{% endif %}
+    {% if item.key_points %}<section class="reading-block"><h2>O que você precisa saber</h2><ul class="check-list">{% for point in item.key_points %}<li>{{ point }}</li>{% endfor %}</ul></section>{% endif %}
+    {% if item.cautions %}<section class="reading-block caution"><h2>Confira antes de participar</h2><ul>{% for caution in item.cautions %}<li>{{ caution }}</li>{% endfor %}</ul></section>{% endif %}
+    <section class="reading-block official-object">
+      <h2>Objeto publicado pelo órgão</h2>
+      <p>{{ item.title }}</p>
+      <small>Este é o texto original que recebemos da fonte oficial.</small>
+    </section>
+  </main>
+  <aside class="decision-panel">
+    <p class="eyebrow">RESUMO DA OPORTUNIDADE</p>
+    <dl>
+      <div><dt>Valor estimado</dt><dd>{% if item.value != None %}R$ {{ item.value|floatformat:2 }}{% else %}Não informado pelo órgão{% endif %}</dd></div>
+      <div><dt>Prazo para agir</dt><dd>{% if item.deadline %}{{ item.deadline|date:'d/m/Y' }}{% else %}Confira no edital{% endif %}</dd></div>
+      <div><dt>Início das propostas</dt><dd>{{ item.proposal_opening_date|date:'d/m/Y'|default:'Não informado' }}</dd></div>
+      <div><dt>Publicação</dt><dd>{{ item.publication_date|date:'d/m/Y'|default:'Não informada' }}</dd></div>
+      <div><dt>Local</dt><dd>{{ item.uf|default:'Não informado' }}</dd></div>
+    </dl>
+    {% if item.official_url %}<a class="button full-button" href="{{ item.official_url }}" target="_blank" rel="noopener noreferrer">Ler edital completo no PNCP ↗</a>{% endif %}
+    {% if not follow %}<form method="post" action="{% url 'follow' item.pk %}">{% csrf_token %}<button class="secondary-button full-button">Acompanhar oportunidade</button></form>{% else %}<a class="secondary-button full-button" href="{% url 'following' %}">✓ Ver meu acompanhamento</a>{% endif %}
+    <small>Identificador PNCP<br><strong>{{ item.pncp_id }}</strong></small>
+  </aside>
+</div>
+<section class="next-step"><div><span>1</span><p><strong>Leia o edital completo</strong><br>Confirme documentos, horários e local de entrega.</p></div><div><span>2</span><p><strong>Calcule se vale a pena</strong><br>Considere impostos, frete, equipe e sua margem.</p></div><div><span>3</span><p><strong>Acompanhe o prazo</strong><br>Salve a oportunidade para organizar sua decisão.</p></div></section>
+{% endblock %}

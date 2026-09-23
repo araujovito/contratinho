@@ -7,6 +7,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
+from radar_pncp.filtro import termos_encontrados
+
 from .forms import FollowForm, PreferenceForm, SignupForm
 from .models import Follow, Opportunity, Preference
 
@@ -62,6 +64,8 @@ def opportunities(request):
             "opportunity_id", flat=True
         )
     )
+    for item in page.object_list:
+        item.match_terms = termos_encontrados(item.title, preference.market.terms)
     return render(
         request,
         "radar/opportunities.html",
@@ -73,7 +77,13 @@ def opportunities(request):
 def detail(request, pk):
     item = get_object_or_404(Opportunity, pk=pk)
     follow = Follow.objects.filter(user=request.user, opportunity=item).first()
-    return render(request, "radar/detail.html", {"item": item, "follow": follow})
+    preference = Preference.objects.select_related("market").filter(user=request.user).first()
+    match_terms = termos_encontrados(item.title, preference.market.terms) if preference else ()
+    return render(
+        request,
+        "radar/detail.html",
+        {"item": item, "follow": follow, "match_terms": match_terms},
+    )
 
 
 @login_required

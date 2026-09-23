@@ -2,6 +2,7 @@ import re
 
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
 class Market(models.Model):
@@ -50,6 +51,12 @@ class Opportunity(models.Model):
         if letters and sum(character.isupper() for character in letters) / len(letters) > 0.85:
             text = text.capitalize()
         return text
+
+    @property
+    def days_remaining(self):
+        if self.deadline is None:
+            return None
+        return (self.deadline - timezone.localdate()).days
 
 
 class Follow(models.Model):
