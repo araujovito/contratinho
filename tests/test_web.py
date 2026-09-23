@@ -6,7 +6,7 @@ import pytest
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.core.management.base import CommandError
-from django.test import Client
+from django.test import Client, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
@@ -62,7 +62,17 @@ def test_requires_login(client):
         assert client.get(reverse(name)).status_code == 302
 
 
-def test_admin_requires_staff_user(client, user):
+@override_settings(DEBUG=True)
+def test_local_admin_opens_without_credentials(client):
+    response = client.get(reverse("admin:index"))
+    assert response.status_code == 200
+    assert response.wsgi_request.user.username == "admin-local"
+    assert not response.wsgi_request.user.has_usable_password()
+    assert reverse("admin:web_market_changelist") in response.content.decode()
+
+
+@override_settings(DEBUG=False)
+def test_admin_requires_staff_user_outside_local_development(client, user):
     client.force_login(user)
     response = client.get(reverse("admin:index"))
     assert response.status_code == 302
