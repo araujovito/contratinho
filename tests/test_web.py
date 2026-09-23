@@ -462,3 +462,41 @@ def test_detail_nao_reconsulta_em_clique_seguido(client, oportunidade_logada):
         client.get(f"/oportunidades/{item.pk}/")
 
     assert not consulta.called
+
+
+@pytest.mark.django_db
+def test_mercados_com_ruido_observado_ganharam_exclusoes():
+    """Mercado sem exclusão entrega ruído; foi o que aconteceu na primeira tela."""
+    for slug in ("graficos", "limpeza", "manutencao", "alimentacao"):
+        assert Market.objects.get(slug=slug).exclusions, slug
+
+
+@pytest.mark.django_db
+def test_informatica_segue_sem_exclusao_de_proposito():
+    """Não achamos falso positivo defensável para informática nos 539 editais.
+
+    Os casos duvidosos eram compra de material contra prestação de serviço —
+    distinção que pede outro mercado, não lista de exclusão. Inventar termo
+    aqui cortaria edital bom. Está no ROADMAP como pendência de dados.
+    """
+    assert Market.objects.get(slug="informatica").exclusions == []
+
+
+@pytest.mark.django_db
+def test_exclusoes_cortam_os_falsos_positivos_observados():
+    """Cada caso abaixo apareceu de verdade no catálogo do RJ em 23/09/2026."""
+    from radar_pncp.filtro import casa
+
+    casos = [
+        ("limpeza", "Rolete de limpeza contínua; cartuchos de fitas", True),
+        ("limpeza", "sinalização nas Unidades de Conservação do Mosaico Carioca", True),
+        ("limpeza", "serviços contínuos de limpeza, asseio e conservação predial", False),
+        ("manutencao", "REPAROS E CONSERTOS DE PNEUS E CÂMARAS DE AR", True),
+        ("manutencao", "serviços contínuos de manutenção predial", False),
+        ("alimentacao", "Alimentação automática de cartões", True),
+        ("alimentacao", "fornecimento de refeições para a rede escolar", False),
+    ]
+    for slug, texto, deve_sair in casos:
+        market = Market.objects.get(slug=slug)
+        excluido = any(casa(texto, termo) for termo in market.exclusions)
+        assert excluido is deve_sair, f"{slug}: {texto!r}"
