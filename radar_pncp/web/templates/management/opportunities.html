@@ -10,7 +10,14 @@
 </section>
 <form class="market-filter panel" method="get">
   <input type="hidden" name="mercado" value="{{ selected_market.slug }}">
-  <div><label for="valor_maximo">Qual é o valor máximo que você quer atender?</label><p>Mostramos apenas oportunidades do Rio de Janeiro com valor estimado dentro desse teto.</p></div>
+  <div><label for="valor_maximo">Qual é o valor máximo que você quer atender?</label><p>Mostramos apenas oportunidades do Rio de Janeiro com valor estimado dentro desse teto.</p>
+    <nav class="ceiling-options" aria-label="Opções rápidas de valor máximo">
+      <a href="?mercado={{ selected_market.slug|urlencode }}&valor_maximo=50000">Até R$ 50 mil</a>
+      <a href="?mercado={{ selected_market.slug|urlencode }}&valor_maximo=100000">Até R$ 100 mil</a>
+      <a href="?mercado={{ selected_market.slug|urlencode }}&valor_maximo=250000">Até R$ 250 mil</a>
+      <a href="?mercado={{ selected_market.slug|urlencode }}&valor_maximo=500000">Até R$ 500 mil</a>
+    </nav>
+  </div>
   <div class="money-input"><span>R$</span><input id="valor_maximo" name="valor_maximo" type="number" min="0" step="1000" value="{{ value_ceiling|stringformat:'.2f' }}"><button>Atualizar painel</button></div>
 </form>
 <div class="filter-note"><span>{{ selected_market.name }} · Rio de Janeiro · até R$ {{ value_ceiling|floatformat:2 }}</span><a href="{% url 'admin_markets' %}">Trocar mercado</a></div>

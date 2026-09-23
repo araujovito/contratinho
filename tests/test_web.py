@@ -158,6 +158,8 @@ def test_market_dashboard_filters_rj_and_value_ceiling(client, item):
     body = response.content.decode()
     assert "Serviços gráficos no RJ" in body
     assert "Qual é o valor máximo" in body
+    assert "Até R$ 50 mil" in body
+    assert "Até R$ 500 mil" in body
 
 
 def test_catalog_filter_follow_and_stage(client, user, item):

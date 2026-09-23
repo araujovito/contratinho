@@ -133,6 +133,9 @@ td small { margin-top: 3px; color: #788983; font-size: 11px; }
 .market-filter { display: flex; align-items: center; justify-content: space-between; gap: 28px; margin-bottom: 14px; padding: 19px; }
 .market-filter label { display: block; font-size: 14px; font-weight: 750; }
 .market-filter p { margin: 4px 0 0; color: #71827b; font-size: 11px; }
+.ceiling-options { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.ceiling-options a { padding: 5px 8px; border: 1px solid #cbd8d1; border-radius: 20px; background: #f7faf7; color: #2c6650; font-size: 10px; font-weight: 700; text-decoration: none; }
+.ceiling-options a:hover { border-color: #78a390; background: #e7f2ea; }
 .money-input { display: flex; align-items: center; flex: 0 0 360px; }
 .money-input span { align-self: stretch; display: grid; place-items: center; padding: 0 11px; border: 1px solid #b9c6c0; border-right: 0; border-radius: 8px 0 0 8px; background: #edf3ee; color: #47665a; font-size: 12px; font-weight: 700; }
 .money-input input { border-radius: 0; }
