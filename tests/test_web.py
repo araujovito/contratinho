@@ -46,6 +46,7 @@ def test_signup_onboarding_and_private_session(client):
         reverse("signup"),
         {
             "username": "novo",
+            "email": "novo@exemplo.com",
             "password1": "senha-segura-e-comprida-42",
             "password2": "senha-segura-e-comprida-42",
         },
@@ -538,3 +539,44 @@ def test_admin_local_nao_abre_de_fora():
 def test_admin_exige_login_fora_do_desenvolvimento():
     resposta = Client(REMOTE_ADDR="127.0.0.1").get("/admin/")
     assert resposta.status_code != 200
+
+
+@pytest.mark.django_db
+def test_cadastro_exige_email():
+    """Sem endereço não há aviso, e sem aviso o Radar não resolve nada."""
+    resposta = Client().post(
+        "/conta/criar/",
+        {"username": "novo", "password1": "senha-longa-2026", "password2": "senha-longa-2026"},
+    )
+    assert resposta.status_code == 200  # formulário volta com erro
+    assert not User.objects.filter(username="novo").exists()
+
+
+@pytest.mark.django_db
+def test_cadastro_guarda_o_email_em_minusculas():
+    Client().post(
+        "/conta/criar/",
+        {
+            "username": "novo",
+            "email": "  Alguem@Exemplo.COM ",
+            "password1": "senha-longa-2026",
+            "password2": "senha-longa-2026",
+        },
+    )
+    assert User.objects.get(username="novo").email == "alguem@exemplo.com"
+
+
+@pytest.mark.django_db
+def test_cadastro_recusa_email_repetido():
+    User.objects.create_user("primeiro", email="alguem@exemplo.com", password="senha-longa-2026")
+    resposta = Client().post(
+        "/conta/criar/",
+        {
+            "username": "segundo",
+            "email": "ALGUEM@exemplo.com",
+            "password1": "senha-longa-2026",
+            "password2": "senha-longa-2026",
+        },
+    )
+    assert resposta.status_code == 200
+    assert not User.objects.filter(username="segundo").exists()
