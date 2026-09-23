@@ -22,7 +22,7 @@ Aqui o assunto é outro: quem cobra quanto, de quem, e onde sobra espaço.
 Três leituras desse quadro.
 
 **O piso de preço é R$ 44,90.** Não existe espaço para cobrar caro de quem está
-começando. Qualquer monetização futura do Radar cabe embaixo de R$ 50 ou é
+começando. Qualquer monetização futura do Contratinho cabe embaixo de R$ 50 ou é
 gratuita — e R$ 50/mês de um público que ainda não ganhou nenhuma licitação é
 uma venda difícil, que os concorrentes resolvem prometendo tempo economizado,
 não resultado.
@@ -32,8 +32,8 @@ de pagar, e a LicitaCerta deixa consultar por CNPJ sem nem criar conta. A
 decisão do `PRODUTO.md` de não exigir CNPJ para explorar está certa, mas é
 paridade com o mercado, não vantagem.
 
-**Cobertura de fontes é o eixo onde o Radar perde, e é caro disputar.** Effecti
-tem 1.400 portais, ConLicitação e Alerta Licitação passam de 6.000. O Radar tem
+**Cobertura de fontes é o eixo onde o Contratinho perde, e é caro disputar.** Effecti
+tem 1.400 portais, ConLicitação e Alerta Licitação passam de 6.000. O Contratinho tem
 um: o PNCP. A ContrataX é a prova de que dá para viver disso — também é só PNCP
 e transforma isso em argumento de preço baixo. Mas é uma escolha que precisa ser
 dita em voz alta, não escondida.
@@ -58,7 +58,7 @@ não é posicionamento — é o que todo mundo já diz estar fazendo.
 ### 2. Web sem notificação é o pior dos mundos
 
 A LicitaCerta é WhatsApp e nada mais. A VouLicitar e a Alerta Licitação têm app
-com push. O Radar hoje tem site e CLI: o usuário precisa **lembrar de entrar**.
+com push. O Contratinho hoje tem site e CLI: o usuário precisa **lembrar de entrar**.
 
 O problema original que você escreveu no escopo era "quem esquece de olhar,
 perde o prazo". A versão web, do jeito que está, não resolve isso — ela troca
@@ -84,7 +84,7 @@ Todos os concorrentes vendem "todas as licitações do Brasil" e deixam o usuár
 filtrar. Para quem nunca licitou, isso é o problema, não a solução: a maior
 parte do que ele vê é coisa que ele não pode ou não deveria disputar.
 
-> **Proposta de norte:** o Radar não é um buscador de licitações. É a ferramenta
+> **Proposta de norte:** o Contratinho não é um buscador de licitações. É a ferramenta
 > da **primeira** licitação — dispensa eletrônica e pregão de pequeno valor,
 > exclusivos ME/EPP, no PNCP.
 

@@ -16,7 +16,7 @@ economizado. O início pelo CNPJ torna a personalização concreta e reduz a con
 real antes de explicar recursos; oferecer uma entrada curta para quem ainda não domina
 licitações.
 
-**Evitar:** depender somente do WhatsApp. O Radar precisa manter um espaço claro para
+**Evitar:** depender somente do WhatsApp. O Contratinho precisa manter um espaço claro para
 comparar, decidir e acompanhar oportunidades.
 
 ### VouLicitar

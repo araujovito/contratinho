@@ -33,5 +33,11 @@ Metas numéricas serão definidas após entrevistas e piloto; ainda não há val
 
 ## Fora desta primeira entrega
 Pagamento, envio automático de propostas, recomendações jurídicas, decisão automática de
-habilitação, marketplace e microserviços. Alertas externos dependem de preferências e
-entrega confiável.
+habilitação, marketplace e microserviços.
+
+O aviso por e-mail **saiu** desta lista em 23/09/2026: um site que exige lembrar de
+entrar não resolve o problema que abriu o projeto. Ver `send_alerts` em `docs/WEB.md`.
+WhatsApp segue fora até haver usuário validado — é o padrão do segmento, com custo e
+burocracia de API que só se pagam depois.
+
+O que o produto promete e o que ele explicitamente não promete está em `docs/CONTRATO.md`.
