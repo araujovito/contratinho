@@ -1,3 +1,5 @@
+import re
+
 from django.conf import settings
 from django.db import models
 
@@ -30,9 +32,24 @@ class Opportunity(models.Model):
     official_url = models.URLField(max_length=500, blank=True)
     markets = models.ManyToManyField(Market)
     fetched_at = models.DateTimeField()
+    plain_summary = models.TextField(blank=True)
+    key_points = models.JSONField(default=list, blank=True)
+    cautions = models.JSONField(default=list, blank=True)
+    summary_model = models.CharField(max_length=100, blank=True)
+    summary_source_hash = models.CharField(max_length=64, blank=True)
+    summarized_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["-fetched_at", "pk"]
+
+    @property
+    def readable_object(self):
+        """Objeto limpo para leitura; o texto oficial continua preservado em `title`."""
+        text = re.sub(r"^\[[^]]+\]\s*[-–—:]?\s*", "", self.title).strip()
+        letters = [character for character in text if character.isalpha()]
+        if letters and sum(character.isupper() for character in letters) / len(letters) > 0.85:
+            text = text.capitalize()
+        return text
 
 
 class Follow(models.Model):

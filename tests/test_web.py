@@ -1,5 +1,6 @@
 from dataclasses import replace
 from datetime import date, timedelta
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
@@ -312,6 +313,46 @@ def test_portal_search_maps_dates_value_and_official_url():
 def test_untrusted_url_not_published(item):
     publish([replace(item, url="javascript:alert(1)")])
     assert Opportunity.objects.get().official_url == ""
+
+
+def test_readable_object_preserves_official_title(item):
+    publish([replace(item, objeto="[Portal de Compras Públicas] - COMPRA DE MATERIAL DE LIMPEZA")])
+    opportunity = Opportunity.objects.get()
+    assert opportunity.readable_object == "Compra de material de limpeza"
+    assert opportunity.title.startswith("[Portal de Compras Públicas]")
+
+
+def test_ai_summary_is_shown_with_original_and_official_link(client, user, item):
+    publish([item])
+    opportunity = Opportunity.objects.get()
+    opportunity.plain_summary = "O órgão quer contratar impressão de cartilhas."
+    opportunity.key_points = ["Entrega no Rio de Janeiro"]
+    opportunity.cautions = ["Confira a quantidade no edital"]
+    opportunity.save()
+    client.force_login(user)
+    body = client.get(reverse("detail", args=[opportunity.pk])).content.decode()
+    assert "EM LINGUAGEM SIMPLES" in body
+    assert "Entrega no Rio de Janeiro" in body
+    assert "Ver objeto original publicado" in body
+    assert "Ler edital completo no PNCP" in body
+
+
+def test_summary_command_persists_structured_result(item, monkeypatch):
+    publish([item])
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    result = SimpleNamespace(
+        summary="Impressão de cartilhas para o órgão.",
+        key_points=["Serviço gráfico"],
+        cautions=["Confira as quantidades"],
+    )
+    with patch(
+        "radar_pncp.web.management.commands.summarize_opportunities.summarize", return_value=result
+    ):
+        call_command("summarize_opportunities", limit=1)
+    opportunity = Opportunity.objects.get()
+    assert opportunity.plain_summary == result.summary
+    assert opportunity.key_points == result.key_points
+    assert opportunity.summary_source_hash
 
 
 def test_invalid_preferences_and_stage(client, user, item):

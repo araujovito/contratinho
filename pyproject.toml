@@ -23,6 +23,7 @@ classifiers = [
 ]
 dependencies = [
   "curl-cffi>=0.16,<1",
+  "openai>=2.0,<3",
   "pypncp>=1.2.1",
   "typer>=0.12",
   "rich>=13.0",

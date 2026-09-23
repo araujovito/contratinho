@@ -63,6 +63,25 @@ A busca do portal não possui contrato público versionado. Mudanças no portal 
 exigir ajuste no adaptador; falhas preservam o catálogo anterior. Testes automatizados
 usam respostas sintéticas e nunca acessam a rede.
 
+## Explicações em linguagem simples
+
+O texto oficial permanece intacto. A interface remove apenas prefixos de origem e
+melhora a capitalização para leitura. Opcionalmente, um processo separado pode gerar
+uma explicação curta, pontos principais e alertas em campos próprios:
+
+```bash
+export OPENAI_API_KEY="..."
+export RADAR_AI_MODEL="gpt-4o-mini"  # opcional
+python manage.py summarize_opportunities --limit 20
+```
+
+O comando ignora oportunidades cuja fonte não mudou; `--force` refaz a análise.
+Ele usa saída estruturada, não roda durante uma requisição web e nunca substitui o
+objeto publicado. A tela identifica o conteúdo automático, permite abrir o objeto
+original e mantém o link para o edital completo no PNCP. A versão atual resume os
+metadados coletados; download e análise dos anexos completos é a próxima etapa e
+depende de uma rota de documentos estável no PNCP.
+
 ## Verificação
 
 ```bash
